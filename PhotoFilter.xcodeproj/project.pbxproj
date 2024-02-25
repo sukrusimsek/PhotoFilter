@@ -13,6 +13,8 @@
 		8D848B472B8BB3720063C8D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D848B462B8BB3720063C8D9 /* Assets.xcassets */; };
 		8D848B4A2B8BB3720063C8D9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8D848B482B8BB3720063C8D9 /* LaunchScreen.storyboard */; };
 		8D848B572B8BBC270063C8D9 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D848B562B8BBC270063C8D9 /* HomeViewModel.swift */; };
+		8D848B592B8BBDDB0063C8D9 /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D848B582B8BBDDB0063C8D9 /* UIColor+Ext.swift */; };
+		8D848B5C2B8BBEDF0063C8D9 /* GPUImage in Frameworks */ = {isa = PBXBuildFile; productRef = 8D848B5B2B8BBEDF0063C8D9 /* GPUImage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,7 @@
 		8D848B492B8BB3720063C8D9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8D848B4B2B8BB3720063C8D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D848B562B8BBC270063C8D9 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		8D848B582B8BBDDB0063C8D9 /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D848B5C2B8BBEDF0063C8D9 /* GPUImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +79,7 @@
 		8D848B522B8BB3B20063C8D9 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				8D848B582B8BBDDB0063C8D9 /* UIColor+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -123,6 +128,9 @@
 			dependencies = (
 			);
 			name = PhotoFilter;
+			packageProductDependencies = (
+				8D848B5B2B8BBEDF0063C8D9 /* GPUImage */,
+			);
 			productName = PhotoFilter;
 			productReference = 8D848B3A2B8BB3700063C8D9 /* PhotoFilter.app */;
 			productType = "com.apple.product-type.application";
@@ -151,6 +159,9 @@
 				Base,
 			);
 			mainGroup = 8D848B312B8BB3700063C8D9;
+			packageReferences = (
+				8D848B5A2B8BBEDF0063C8D9 /* XCRemoteSwiftPackageReference "GPUImage3" */,
+			);
 			productRefGroup = 8D848B3B2B8BB3700063C8D9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -179,6 +190,7 @@
 			files = (
 				8D848B422B8BB3700063C8D9 /* HomeScreen.swift in Sources */,
 				8D848B3E2B8BB3700063C8D9 /* AppDelegate.swift in Sources */,
+				8D848B592B8BBDDB0063C8D9 /* UIColor+Ext.swift in Sources */,
 				8D848B402B8BB3700063C8D9 /* SceneDelegate.swift in Sources */,
 				8D848B572B8BBC270063C8D9 /* HomeViewModel.swift in Sources */,
 			);
@@ -332,6 +344,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -360,6 +373,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -395,6 +409,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8D848B5A2B8BBEDF0063C8D9 /* XCRemoteSwiftPackageReference "GPUImage3" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/BradLarson/GPUImage3";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8D848B5B2B8BBEDF0063C8D9 /* GPUImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8D848B5A2B8BBEDF0063C8D9 /* XCRemoteSwiftPackageReference "GPUImage3" */;
+			productName = GPUImage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8D848B322B8BB3700063C8D9 /* Project object */;
 }
