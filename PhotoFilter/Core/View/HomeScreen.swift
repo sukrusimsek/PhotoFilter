@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import GPUImage
+import CoreImage
 import AVFoundation
 
 protocol HomeScreenInterface: AnyObject {
@@ -22,8 +22,8 @@ final class HomeScreen: UIViewController {
     let imagePicker = UIImagePickerController()
     private let viewModel = HomeViewModel()
     let stackView = UIStackView()
-    let imageViewInput = UIImageView()
-    let imageViewOutput = UIImageView()
+    var imageViewInput = UIImageView()
+    var imageViewOutput = UIImageView()
     
     let button = UIButton()
     override func viewDidLoad() {
@@ -37,7 +37,7 @@ final class HomeScreen: UIViewController {
 extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UINavigationControllerDelegate  {
     func configureVC() {
         imagePicker.delegate = self
-
+        
     }
     func configureStackView() {
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -134,17 +134,17 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             imagePicker.delegate = self
             imagePicker.sourceType = .photoLibrary
-            imagePicker.allowsEditing = true // Eğer resim düzenlemeye izin vermek istiyorsanız true yapın
+            imagePicker.allowsEditing = true
             self.present(imagePicker, animated: true, completion: nil)
         } else {
-            print("Error in Open Camera")
+            print("Error in Open Gallery")
         }
     }
     func openCamera() {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             imagePicker.delegate = self
             imagePicker.sourceType = .camera
-            imagePicker.allowsEditing = true // Eğer resim düzenlemeye izin vermek istiyorsanız true yapın
+            imagePicker.allowsEditing = true
             self.present(imagePicker, animated: true, completion: nil)
         } else {
             print("Error in Open Camera")
@@ -153,10 +153,30 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             imageViewInput.image = pickedImage
+            
+            
+            DispatchQueue.main.async {
+                let outputImage = applySepiaFilter(to: pickedImage)
+                self.imageViewOutput.image = outputImage
+            }
+
+            dismiss(animated: true,completion: nil)
         }
-        dismiss(animated: true,completion: nil)
-    }
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
+        func applySepiaFilter(to inputImage: UIImage) -> UIImage? {
+            guard let filter = CIFilter(name: "CISepiaTone") else { return nil }
+            let ciInput = CIImage(image: inputImage)
+            filter.setValue(ciInput, forKey: kCIInputImageKey)
+            filter.setValue(0.8, forKey: kCIInputIntensityKey) // Sepia yoğunluğunu ayarlayın
+            
+            let context = CIContext(options: nil)
+            if let outputImage = filter.outputImage,
+               let cgImage = context.createCGImage(outputImage, from: outputImage.extent) {
+                return UIImage(cgImage: cgImage)
+            }
+            return nil
+        }
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            dismiss(animated: true, completion: nil)
+        }
     }
 }

@@ -14,7 +14,6 @@
 		8D848B4A2B8BB3720063C8D9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8D848B482B8BB3720063C8D9 /* LaunchScreen.storyboard */; };
 		8D848B572B8BBC270063C8D9 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D848B562B8BBC270063C8D9 /* HomeViewModel.swift */; };
 		8D848B592B8BBDDB0063C8D9 /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D848B582B8BBDDB0063C8D9 /* UIColor+Ext.swift */; };
-		8D848B5C2B8BBEDF0063C8D9 /* GPUImage in Frameworks */ = {isa = PBXBuildFile; productRef = 8D848B5B2B8BBEDF0063C8D9 /* GPUImage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,7 +33,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D848B5C2B8BBEDF0063C8D9 /* GPUImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,7 +127,6 @@
 			);
 			name = PhotoFilter;
 			packageProductDependencies = (
-				8D848B5B2B8BBEDF0063C8D9 /* GPUImage */,
 			);
 			productName = PhotoFilter;
 			productReference = 8D848B3A2B8BB3700063C8D9 /* PhotoFilter.app */;
@@ -160,7 +157,6 @@
 			);
 			mainGroup = 8D848B312B8BB3700063C8D9;
 			packageReferences = (
-				8D848B5A2B8BBEDF0063C8D9 /* XCRemoteSwiftPackageReference "GPUImage3" */,
 			);
 			productRefGroup = 8D848B3B2B8BB3700063C8D9 /* Products */;
 			projectDirPath = "";
@@ -409,25 +405,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		8D848B5A2B8BBEDF0063C8D9 /* XCRemoteSwiftPackageReference "GPUImage3" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/BradLarson/GPUImage3";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		8D848B5B2B8BBEDF0063C8D9 /* GPUImage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8D848B5A2B8BBEDF0063C8D9 /* XCRemoteSwiftPackageReference "GPUImage3" */;
-			productName = GPUImage;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8D848B322B8BB3700063C8D9 /* Project object */;
 }
