@@ -154,27 +154,16 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             imageViewInput.image = pickedImage
             
-            
+            let imageService = ImageFilterService()
             DispatchQueue.main.async {
-                let outputImage = applySepiaFilter(to: pickedImage)
+                let outputImage = imageService.applySepia(to: pickedImage, intensity: 1)
+                
                 self.imageViewOutput.image = outputImage
             }
 
             dismiss(animated: true,completion: nil)
         }
-        func applySepiaFilter(to inputImage: UIImage) -> UIImage? {
-            guard let filter = CIFilter(name: "CISepiaTone") else { return nil }
-            let ciInput = CIImage(image: inputImage)
-            filter.setValue(ciInput, forKey: kCIInputImageKey)
-            filter.setValue(0.8, forKey: kCIInputIntensityKey) // Sepia yoğunluğunu ayarlayın
-            
-            let context = CIContext(options: nil)
-            if let outputImage = filter.outputImage,
-               let cgImage = context.createCGImage(outputImage, from: outputImage.extent) {
-                return UIImage(cgImage: cgImage)
-            }
-            return nil
-        }
+
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             dismiss(animated: true, completion: nil)
         }
