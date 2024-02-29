@@ -130,6 +130,39 @@ class ImageFilterService {
     func applyFalseColor(to image: UIImage, color0: CIColor = CIColor(red: 1, green: 1, blue: 0), color1: CIColor = CIColor(red: 0, green: 0, blue: 1)) -> UIImage? {
         applyFilter(to: image, withName: "CIFalseColor")
     }
-    
+    func applyEdgeWork(to image: UIImage, radius: Float = 4)-> UIImage? {
+        applyFilter(to: image, withName: "CIEdgeWork", parameters: [kCIInputRadiusKey : radius])
+    }
+    func applyDocumentEnhancer(to image: UIImage, amount: Float = 4)-> UIImage? {
+        applyFilter(to: image, withName: "CIDocumentEnhancer", parameters: [kCIInputAmountKey : amount])
+    }
+    func applyDotScreen(to image: UIImage, angle: Float = 0, center: CIVector = CIVector(x: 2016, y: 1512), width: Float = 25, sharpness: Float = 0.7)-> UIImage? {
+        applyFilter(to: image, withName: "CIDotScreen", parameters: [kCIInputAngleKey : angle,
+                                                                     kCIInputCenterKey: center,
+                                                                      kCIInputWidthKey: width,
+                                                                  kCIInputSharpnessKey: sharpness])
+    }
+    func applyDither(to image: UIImage, intensity: Float = 0.4 )-> UIImage? {
+        applyFilter(to: image, withName: "CIDither", parameters: [kCIInputIntensityKey : intensity])
+    }
+    func applyDiscBlur(to image: UIImage, radius: Float = 8)-> UIImage? {
+        applyFilter(to: image, withName: "CIDiscBlur", parameters: [kCIInputRadiusKey : radius])
+    }
+//    func applyDepthToDisparity(to image: UIImage)-> UIImage? {
+//        applyFilter(to: image, withName: "CIDepthToDisparity")
+//    }
+    func applyDepthOfField(to image: UIImage, radius: Float = 5, point0: CIVector = CIVector(x: 2349, y: 846), point1: CIVector = CIVector(x: 571, y: 3121), unSharpMaskRadius: Float = 7, unSharpMaskIntensity: Float = 10)-> UIImage? {
+        applyFilter(to: image, withName: "CIDepthOfField", parameters: [kCIInputRadiusKey : radius,
+                                                                        "inputPoint0": point0,
+                                                                        "inputPoint1": point1])
+    }
+    func applyBloomFilter(to image: UIImage, radius: Float = 10, intensity: Float = 1)-> UIImage? {
+        applyFilter(to: image, withName: "CIBloom", parameters: [kCIInputRadiusKey : radius,
+                                                               kCIInputIntensityKey: intensity])
+    }
+    func applyCrystallize(to image: UIImage, radius: Float = 50, center: CIVector = CIVector(x: 2016, y: 1512)) -> UIImage? {
+        applyFilter(to: image, withName: "CICrystallize", parameters: [kCIInputRadiusKey : radius,
+                                                                        kCIInputCenterKey: center])
+    }
     
 }

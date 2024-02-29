@@ -168,7 +168,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
                 
                 //let outputImage = imageService.applyHexagonalPixellate(to: pickedImage)
                 
-                let outputImage = imageService.applyFalseColor(to: pickedImage)
+                let outputImage = imageService.applyCrystallize(to: pickedImage)
                 
                 
                 self.imageViewOutput.image = outputImage
