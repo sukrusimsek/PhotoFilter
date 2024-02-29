@@ -43,7 +43,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.spacing = 10
-        stackView.backgroundColor = .blue
+        stackView.backgroundColor = .gray
         stackView.layer.cornerRadius = 16
         stackView.layer.masksToBounds = true
         stackView.distribution = .fillProportionally
@@ -75,7 +75,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         imageViewOutput.layer.cornerRadius = 12
         imageViewOutput.layer.masksToBounds = true
         imageViewOutput.contentMode = .scaleAspectFill
-        imageViewOutput.backgroundColor = .cyan
+        imageViewOutput.backgroundColor = .lightText
         stackView.addArrangedSubview(imageViewOutput)
         NSLayoutConstraint.activate([
             imageViewOutput.widthAnchor.constraint(equalToConstant: view.frame.size.width),
@@ -156,7 +156,17 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
             
             let imageService = ImageFilterService()
             DispatchQueue.main.async {
-                let outputImage = imageService.applySepia(to: pickedImage, intensity: 1)
+                //let outputImage = imageService.applyMonochrom(to: pickedImage, color: CIColor(red: 1, green: 0, blue: 0), intensity: 1.0)//Add controller for intensity
+                
+                //let outputImage = imageService.applyColorControl(to: pickedImage, brightness: -0.4, contrast: 1.0, saturation: 0.5)
+                //let outputImage = imageService.applyBokehBlur(to: pickedImage, ringSize: 1, ringAmount: 0, softness: 1, radius: 20)
+                
+                //Vıbrance will add start views.
+                //let outputImage = imageService.applyVibrance(to: pickedImage, amount: 2.0)
+                
+                //let outputImage = imageService.applyPixellate(to: pickedImage, center: CGPoint(x: 150, y: 150), scale: 30)
+                
+                let outputImage = imageService.applyMaskToAlpha(to: pickedImage)
                 
                 self.imageViewOutput.image = outputImage
             }
