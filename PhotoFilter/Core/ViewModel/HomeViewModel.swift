@@ -20,6 +20,7 @@ extension HomeViewModel: HomeViewModelInterface {
         view?.configureStackView()
         view?.configureInputView()
         view?.configureImagePickerButton()
+        view?.configureCollectionView()
         view?.configureOutputView()
     }
 }

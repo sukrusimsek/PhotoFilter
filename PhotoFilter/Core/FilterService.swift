@@ -164,5 +164,30 @@ class ImageFilterService {
         applyFilter(to: image, withName: "CICrystallize", parameters: [kCIInputRadiusKey : radius,
                                                                         kCIInputCenterKey: center])
     }
-    
+    func applyConvolution3x3(to image: UIImage, weights: CIVector = CIVector(values: [
+        0, -2, 0,
+        -2, 9, -2,
+        0, -2, 0
+    ], count: 9), bias: Float = 0)-> UIImage? {
+        applyFilter(to: image, withName: "CIConvolution3X3", parameters: [kCIInputWeightsKey : weights,
+                                                                           kCIInputBiasKey: bias])
+    }
+    func applyConvolution7x7(to image: UIImage, weights: CIVector = CIVector(values: [
+        0, 0, -1, -1, -1, 0, 0,
+        0, -1, -3, -3, -3, -1, 0,
+        -1, -3, 0, 7, 0, -3, -1,
+        -1, -3, 7, 25, 7, -3, -1,
+        -1, -3, 0, 7, 0, -3, -1,
+        0, -1, -3, -3, -3, -1, 0,
+        0, 0, -1, -1, -1, 0, 0
+    ], count: 49), bias: Float = 0)-> UIImage? {
+        applyFilter(to: image, withName: "CIConvolution7X7", parameters: [kCIInputWeightsKey : weights,
+                                                                           kCIInputBiasKey: bias])
+    }
+    func applyComicEffect(to image: UIImage) -> UIImage? {
+        applyFilter(to: image, withName: "CIComicEffect")
+    }
+    func applyBoxBlur(to image: UIImage, radius: Float = 10) -> UIImage? {
+        applyFilter(to: image, withName: "CIBoxBlur", parameters: [kCIInputRadiusKey : radius])
+    }
 }

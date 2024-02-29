@@ -14,18 +14,24 @@ protocol HomeScreenInterface: AnyObject {
     func configureImagePickerButton()
     func configureStackView()
     func configureInputView()
+    func configureCollectionView()
     func configureOutputView()
     func useCamera()
+    func openGallery()
+    func openCamera()
+    func reloadData()
     
 }
 final class HomeScreen: UIViewController {
-    let imagePicker = UIImagePickerController()
+    private let imagePicker = UIImagePickerController()
     private let viewModel = HomeViewModel()
-    let stackView = UIStackView()
-    var imageViewInput = UIImageView()
-    var imageViewOutput = UIImageView()
+    private let stackView = UIStackView()
+    private var imageViewInput = UIImageView()
+    private var collectionView: UICollectionView!
+    private var imageViewOutput = UIImageView()
     
-    let button = UIButton()
+    private var imageCollection = [UIImage]()
+    private let button = UIButton()
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.view = self
@@ -34,7 +40,13 @@ final class HomeScreen: UIViewController {
     }
 }
 
-extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UINavigationControllerDelegate  {
+extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func reloadData() {
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
+    }
+    
     func configureVC() {
         imagePicker.delegate = self
         
@@ -49,10 +61,10 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         stackView.distribution = .fillProportionally
         view.addSubview(stackView)
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
+            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
             
         ])
     }
@@ -66,8 +78,46 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         stackView.addArrangedSubview(imageViewInput)
         NSLayoutConstraint.activate([
             imageViewInput.widthAnchor.constraint(equalToConstant: view.frame.size.width),
-            imageViewInput.heightAnchor.constraint(equalToConstant: view.frame.size.height/2.75)
+            imageViewInput.heightAnchor.constraint(equalToConstant: view.frame.size.height/3.5)
         ])
+    }
+    func configureCollectionView() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 0
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.backgroundColor = .blue
+        collectionView.layer.cornerRadius = 16
+        collectionView.layer.masksToBounds = true
+        collectionView.isPagingEnabled = true
+        
+        stackView.addArrangedSubview(collectionView)
+        
+        
+    }
+    //CollectionView Funcs.
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 12
+        //imageCollection.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath)
+        let image = UIImageView(frame: cell.bounds)
+        image.image = imageCollection[indexPath.item]
+        image.contentMode = .scaleAspectFill
+        image.backgroundColor = .red
+        image.layer.cornerRadius = 5
+        image.layer.masksToBounds = true
+        cell.contentView.addSubview(image)
+        return cell
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 90, height: 90)
     }
     func configureOutputView() {
         imageViewOutput.translatesAutoresizingMaskIntoConstraints = false
@@ -79,11 +129,10 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         stackView.addArrangedSubview(imageViewOutput)
         NSLayoutConstraint.activate([
             imageViewOutput.widthAnchor.constraint(equalToConstant: view.frame.size.width),
-            imageViewOutput.heightAnchor.constraint(equalToConstant: view.frame.size.height/2.75)
+            imageViewOutput.heightAnchor.constraint(equalToConstant: view.frame.size.height/3.5)
         ])
     }
     func configureImagePickerButton() {
-        
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .lightGray
         button.setTitle("Fotoğraf Seç", for: .normal)
@@ -168,7 +217,9 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
                 
                 //let outputImage = imageService.applyHexagonalPixellate(to: pickedImage)
                 
-                let outputImage = imageService.applyCrystallize(to: pickedImage)
+                
+                
+                let outputImage = imageService.applyBoxBlur(to: pickedImage)
                 
                 
                 self.imageViewOutput.image = outputImage
