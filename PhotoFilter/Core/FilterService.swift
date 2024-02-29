@@ -52,17 +52,13 @@ class ImageFilterService {
                                                                        kCIInputSharpnessKey : sharpness,
                                                                            kCIInputWidthKey : width])
     }
-    func applyToneCurve(to image: UIImage, point0: CGPoint = CGPoint(x: 0, y: 0), point1: CGPoint = CGPoint(x: 0.22, y: 0.25), point2: CGPoint = CGPoint(x: 0.4, y: 0.5), point3: CGPoint = CGPoint(x: 0.65, y: 0.75), point4: CGPoint = CGPoint(x: 1, y: 1)) -> UIImage? {
-        let inputPoint0 = CIVector(cgPoint: point0)
-        let inputPoint1 = CIVector(cgPoint: point1)
-        let inputPoint2 = CIVector(cgPoint: point2)
-        let inputPoint3 = CIVector(cgPoint: point3)
-        let inputPoint4 = CIVector(cgPoint: point4)
-        return applyFilter(to: image, withName: "CIToneCurve", parameters: ["inputPoint0" : inputPoint0,
-                    "inputPoint1" : inputPoint1,
-                    "inputPoint2" : inputPoint2,
-                    "inputPoint3" : inputPoint3,
-                    "inputPoint4" : inputPoint4])
+    func applyToneCurve(to image: UIImage, point0: CIVector = CIVector(x: 0, y: 0), point1: CIVector = CIVector(x: 0.22, y: 0.25), point2: CIVector = CIVector(x: 0.4, y: 0.5), point3: CIVector = CIVector(x: 0.65, y: 0.75), point4: CIVector = CIVector(x: 1, y: 1)) -> UIImage? {
+
+        return applyFilter(to: image, withName: "CIToneCurve", parameters: ["inputPoint0" : point0,
+                    "inputPoint1" : point1,
+                    "inputPoint2" : point2,
+                    "inputPoint3" : point3,
+                    "inputPoint4" : point4])
     }
     func applyTemperatureAndTint(to image: UIImage, neutral: CIVector = CIVector(x: 11500, y: 10), targetNeutral: CIVector = CIVector(x: 4000, y: 0)) -> UIImage? {
         applyFilter(to: image, withName: "CITemperatureAndTint", parameters: ["inputNeutral" : neutral, "inputTargetNeutral" : targetNeutral])
@@ -101,8 +97,39 @@ class ImageFilterService {
     func applyMedian(to image: UIImage) -> UIImage? {
         applyFilter(to: image, withName: "CIMedianFilter")
     }
-    func applyMaskToAlpha(to image: UIImage)-> UIImage? {
-        applyFilter(to: image, withName: "CIMaskToAlpha")
+//    func applyMaskToAlpha(to image: UIImage)-> UIImage? {
+//        applyFilter(to: image, withName: "CIMaskToAlpha")
+//    }
+    func applylinearToSRGBToneCurve(to image: UIImage) -> UIImage? {
+        applyFilter(to: image, withName: "CILinearToSRGBToneCurve")
     }
+    func applylineOverlay(to image: UIImage, nrNoiseLevel: Float = 0.07, nrSharpness: Float = 0.71, edgeIntensity: Float = 1, threshold: Float = 0.1, constrant: Float = 50.00)-> UIImage? {
+        applyFilter(to: image, withName: "CILineOverlay", parameters: ["inputnrNoisLevel" : nrNoiseLevel,
+                                                                       kCIInputSharpnessKey: nrSharpness,
+                                                                       kCIInputIntensityKey: edgeIntensity,
+                                                                       "inputThresold": threshold,
+                                                                       kCIInputContrastKey: constrant])
+    }
+    
+    func applyHueAdjuc(to image: UIImage, angle: Float = 5)-> UIImage? {
+        applyFilter(to: image, withName: "CIHueAdjust", parameters: [kCIInputAngleKey : angle])
+    }
+    func applyHatchedScreen(to image: UIImage, center: CIVector = CIVector(x: 2016, y: 1512), angle: Float = 10, width: Float = 35, sharpness: Float = 0.7) -> UIImage? {
+        applyFilter(to: image, withName: "CIHatchedScreen", parameters: [kCIInputCenterKey : center,
+                                                                           kCIInputAngleKey: angle,
+                                                                           kCIInputWidthKey: width,
+                                                                       kCIInputSharpnessKey: sharpness])
+    }
+    func applyHexagonalPixellate(to image: UIImage, center: CIVector = CIVector(x: 2016, y: 1512), scale: Float = 50)-> UIImage? {
+        applyFilter(to: image, withName: "CIHexagonalPixellate", parameters: [kCIInputCenterKey : center,
+                                                                                kCIInputScaleKey: scale])
+    }
+    func applyGammaAdjust(to image: UIImage, power: Float = 4) -> UIImage? {
+        applyFilter(to: image, withName: "CIGammaAdjust", parameters: ["inputPower" : power])
+    }
+    func applyFalseColor(to image: UIImage, color0: CIColor = CIColor(red: 1, green: 1, blue: 0), color1: CIColor = CIColor(red: 0, green: 0, blue: 1)) -> UIImage? {
+        applyFilter(to: image, withName: "CIFalseColor")
+    }
+    
     
 }

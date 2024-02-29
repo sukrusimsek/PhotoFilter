@@ -166,7 +166,10 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
                 
                 //let outputImage = imageService.applyPixellate(to: pickedImage, center: CGPoint(x: 150, y: 150), scale: 30)
                 
-                let outputImage = imageService.applyMaskToAlpha(to: pickedImage)
+                //let outputImage = imageService.applyHexagonalPixellate(to: pickedImage)
+                
+                let outputImage = imageService.applyFalseColor(to: pickedImage)
+                
                 
                 self.imageViewOutput.image = outputImage
             }
