@@ -15,6 +15,7 @@
 		8D848B572B8BBC270063C8D9 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D848B562B8BBC270063C8D9 /* HomeViewModel.swift */; };
 		8D848B592B8BBDDB0063C8D9 /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D848B582B8BBDDB0063C8D9 /* UIColor+Ext.swift */; };
 		8D848B612B8EAAE80063C8D9 /* FilterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D848B602B8EAAE80063C8D9 /* FilterService.swift */; };
+		8D848B642B914B2C0063C8D9 /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D848B632B914B2C0063C8D9 /* CustomCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		8D848B562B8BBC270063C8D9 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		8D848B582B8BBDDB0063C8D9 /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 		8D848B602B8EAAE80063C8D9 /* FilterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterService.swift; sourceTree = "<group>"; };
+		8D848B632B914B2C0063C8D9 /* CustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 		8D848B512B8BB3A40063C8D9 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				8D848B622B914B190063C8D9 /* Cell */,
 				8D848B602B8EAAE80063C8D9 /* FilterService.swift */,
 				8D848B542B8BBB280063C8D9 /* ViewModel */,
 				8D848B532B8BBB230063C8D9 /* View */,
@@ -111,6 +114,14 @@
 				8D848B4B2B8BB3720063C8D9 /* Info.plist */,
 			);
 			name = Supports;
+			sourceTree = "<group>";
+		};
+		8D848B622B914B190063C8D9 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				8D848B632B914B2C0063C8D9 /* CustomCell.swift */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -192,6 +203,7 @@
 				8D848B592B8BBDDB0063C8D9 /* UIColor+Ext.swift in Sources */,
 				8D848B612B8EAAE80063C8D9 /* FilterService.swift in Sources */,
 				8D848B402B8BB3700063C8D9 /* SceneDelegate.swift in Sources */,
+				8D848B642B914B2C0063C8D9 /* CustomCell.swift in Sources */,
 				8D848B572B8BBC270063C8D9 /* HomeViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

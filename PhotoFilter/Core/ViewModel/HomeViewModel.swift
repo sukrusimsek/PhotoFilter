@@ -9,9 +9,11 @@ import Foundation
 protocol HomeViewModelInterface {
     var view: HomeScreenInterface? { get set }
     func viewDidLoad()
+    func applyFiltersOnCollectionView()
 }
 final class HomeViewModel {
     weak var view: HomeScreenInterface?
+    
 }
 
 extension HomeViewModel: HomeViewModelInterface {
@@ -23,4 +25,8 @@ extension HomeViewModel: HomeViewModelInterface {
         view?.configureCollectionView()
         view?.configureOutputView()
     }
+    func applyFiltersOnCollectionView() {
+        
+    }
+    
 }

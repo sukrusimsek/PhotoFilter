@@ -30,7 +30,7 @@ final class HomeScreen: UIViewController {
     private var collectionView: UICollectionView!
     private var imageViewOutput = UIImageView()
     
-    private var imageCollection = [UIImage]()
+    private var imageCollection = [UIImageView]()
     private let button = UIButton()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,40 +84,45 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     func configureCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 10
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.backgroundColor = .blue
-        collectionView.layer.cornerRadius = 16
+        collectionView.backgroundColor = .lightGray
+        collectionView.layer.cornerRadius = 8
+        collectionView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         collectionView.layer.masksToBounds = true
-        collectionView.isPagingEnabled = true
-        
+        //collectionView.isPagingEnabled = true
+        collectionView.register(CustomCell.self, forCellWithReuseIdentifier: "Cell")
         stackView.addArrangedSubview(collectionView)
         
         
     }
     //CollectionView Funcs.
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 12
+        return 20
         //imageCollection.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath)
-        let image = UIImageView(frame: cell.bounds)
-        image.image = imageCollection[indexPath.item]
-        image.contentMode = .scaleAspectFill
-        image.backgroundColor = .red
-        image.layer.cornerRadius = 5
-        image.layer.masksToBounds = true
-        cell.contentView.addSubview(image)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CustomCell
+        
+//        image.image = imageCollection[indexPath.item]
+//        image.contentMode = .scaleAspectFill
+//        image.backgroundColor = .red
+//        image.layer.cornerRadius = 5
+//        image.layer.masksToBounds = true
+//        cell.contentView.addSubview(image)
+        
+        //cell.imageForFilter.image = imageCollection[indexPath.item].image
+        cell.backgroundColor = .black
+        //cell.imageForFilter.image = viewModel.imageCollection[indexPath.item].image
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 90, height: 90)
+        return CGSize.init(width: 90, height: 90)
     }
     func configureOutputView() {
         imageViewOutput.translatesAutoresizingMaskIntoConstraints = false
