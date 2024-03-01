@@ -12,7 +12,6 @@ class CustomCell: UICollectionViewCell {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleAspectFit
-        image.backgroundColor = .red
         image.layer.cornerRadius = 8
         image.layer.masksToBounds = true
         return image
@@ -22,17 +21,18 @@ class CustomCell: UICollectionViewCell {
         super.init(frame: .zero)
         contentView.addSubview(imageForFilter)
         
-//        NSLayoutConstraint.activate([
-//            imageForFilter.topAnchor.constraint(equalTo: contentView.topAnchor),
-//            imageForFilter.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-//
-//        ])
-        
+        NSLayoutConstraint.activate([
+            imageForFilter.widthAnchor.constraint(equalTo: contentView.widthAnchor),
+            imageForFilter.heightAnchor.constraint(equalTo: contentView.heightAnchor)
+
+        ])
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
+    func setupCell(_ image: UIImage) {
+        imageForFilter.image = image
+    }
+        
 }

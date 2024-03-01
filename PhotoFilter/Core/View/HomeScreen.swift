@@ -30,7 +30,7 @@ final class HomeScreen: UIViewController {
     private var collectionView: UICollectionView!
     private var imageViewOutput = UIImageView()
     
-    private var imageCollection = [UIImageView]()
+    private var imageCollection = [UIImage]()
     private let button = UIButton()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,6 +45,11 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         DispatchQueue.main.async {
             self.collectionView.reloadData()
         }
+//        DispatchQueue.global().async { [weak self] in
+//            DispatchQueue.main.async {
+//                self?.collectionView.reloadData()
+//            }
+//        }
     }
     
     func configureVC() {
@@ -97,33 +102,8 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         //collectionView.isPagingEnabled = true
         collectionView.register(CustomCell.self, forCellWithReuseIdentifier: "Cell")
         stackView.addArrangedSubview(collectionView)
-        
-        
-    }
-    //CollectionView Funcs.
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20
-        //imageCollection.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CustomCell
-        
-//        image.image = imageCollection[indexPath.item]
-//        image.contentMode = .scaleAspectFill
-//        image.backgroundColor = .red
-//        image.layer.cornerRadius = 5
-//        image.layer.masksToBounds = true
-//        cell.contentView.addSubview(image)
-        
-        //cell.imageForFilter.image = imageCollection[indexPath.item].image
-        cell.backgroundColor = .black
-        //cell.imageForFilter.image = viewModel.imageCollection[indexPath.item].image
-        return cell
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize.init(width: 90, height: 90)
-    }
     func configureOutputView() {
         imageViewOutput.translatesAutoresizingMaskIntoConstraints = false
         imageViewOutput.image = UIImage(named: "default")
@@ -204,33 +184,57 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
             print("Error in Open Camera")
         }
     }
+    //CollectionView Funcs.
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return imageCollection.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CustomCell
+        let filteredImage = imageCollection[indexPath.item]
+        cell.setupCell(filteredImage)
+        cell.imageForFilter.image = filteredImage
+
+        return cell
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize.init(width: 90, height: 90)
+    }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             imageViewInput.image = pickedImage
+            imageCollection.removeAll()
             
             let imageService = ImageFilterService()
-            DispatchQueue.main.async {
-                //let outputImage = imageService.applyMonochrom(to: pickedImage, color: CIColor(red: 1, green: 0, blue: 0), intensity: 1.0)//Add controller for intensity
-                
-                //let outputImage = imageService.applyColorControl(to: pickedImage, brightness: -0.4, contrast: 1.0, saturation: 0.5)
-                //let outputImage = imageService.applyBokehBlur(to: pickedImage, ringSize: 1, ringAmount: 0, softness: 1, radius: 20)
-                
-                //Vıbrance will add start views.
-                //let outputImage = imageService.applyVibrance(to: pickedImage, amount: 2.0)
-                
-                //let outputImage = imageService.applyPixellate(to: pickedImage, center: CGPoint(x: 150, y: 150), scale: 30)
-                
-                //let outputImage = imageService.applyHexagonalPixellate(to: pickedImage)
-                
-                
-                
-                let outputImage = imageService.applyBoxBlur(to: pickedImage)
-                
-                
-                self.imageViewOutput.image = outputImage
-            }
+            DispatchQueue.global().async { [weak self] in
+                DispatchQueue.main.async {
+                    
+                    let outputImageMonochrom = imageService.applyMonochrom(to: pickedImage, color: CIColor(red: 1, green: 0, blue: 0), intensity: 1.0)//Add controller for intensity
+                    self?.imageCollection.append(outputImageMonochrom ?? .default)
+                    let outputImageColorControl = imageService.applyColorControl(to: pickedImage, brightness: -0.4, contrast: 1.0, saturation: 0.5)
+                    self?.imageCollection.append(outputImageColorControl ?? .default)
+                    let outputImageBokehBlur = imageService.applyBokehBlur(to: pickedImage, ringSize: 1, ringAmount: 0, softness: 1, radius: 20)
+                    self?.imageCollection.append(outputImageBokehBlur ?? .default)
+                    //Vıbrance will add start views.
+                    let outputImageVibrance = imageService.applyVibrance(to: pickedImage, amount: 2.0)
+                    self?.imageCollection.append(outputImageVibrance ?? .default)
+                    let outputImagePixellate = imageService.applyPixellate(to: pickedImage, center: CGPoint(x: 150, y: 150), scale: 30)
+                    self?.imageCollection.append(outputImagePixellate ?? .default)
+                    let outputImageHexagonalPixellate = imageService.applyHexagonalPixellate(to: pickedImage)
+                    self?.imageCollection.append(outputImageHexagonalPixellate ?? .default)
+                    let outputImageBoxBlur = imageService.applyBoxBlur(to: pickedImage)
+                    self?.imageCollection.append(outputImageBoxBlur ?? .default)
 
-            dismiss(animated: true,completion: nil)
+                    self?.imageViewOutput.image = outputImageBoxBlur
+                    self?.collectionView.reloadData()
+                }
+            }
+            
+//            dismiss(animated: true, completion: nil)
+//            collectionView.reloadData()
+            dismiss(animated: true) {[weak self] in
+                self?.collectionView.reloadData()
+            }
         }
 
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

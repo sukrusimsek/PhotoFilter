@@ -8,7 +8,6 @@
 import UIKit
 
 class ImageFilterService {
-
     func applyFilter(to inputImage: UIImage, withName filterName: String, parameters: [String: Any] = [:]) -> UIImage? {
         let context = CIContext(options: nil)
         guard let ciInput = CIImage(image: inputImage), let filter = CIFilter(name: filterName, parameters: parameters) else { return nil }
