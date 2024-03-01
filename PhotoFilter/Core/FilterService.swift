@@ -99,10 +99,10 @@ class ImageFilterService {
 //    func applyMaskToAlpha(to image: UIImage)-> UIImage? {
 //        applyFilter(to: image, withName: "CIMaskToAlpha")
 //    }
-    func applylinearToSRGBToneCurve(to image: UIImage) -> UIImage? {
+    func applyLinearToSRGBToneCurve(to image: UIImage) -> UIImage? {
         applyFilter(to: image, withName: "CILinearToSRGBToneCurve")
     }
-    func applylineOverlay(to image: UIImage, nrNoiseLevel: Float = 0.07, nrSharpness: Float = 0.71, edgeIntensity: Float = 1, threshold: Float = 0.1, constrant: Float = 50.00)-> UIImage? {
+    func applyLineOverlay(to image: UIImage, nrNoiseLevel: Float = 0.07, nrSharpness: Float = 0.71, edgeIntensity: Float = 1, threshold: Float = 0.1, constrant: Float = 50.00)-> UIImage? {
         applyFilter(to: image, withName: "CILineOverlay", parameters: ["inputnrNoisLevel" : nrNoiseLevel,
                                                                        kCIInputSharpnessKey: nrSharpness,
                                                                        kCIInputIntensityKey: edgeIntensity,

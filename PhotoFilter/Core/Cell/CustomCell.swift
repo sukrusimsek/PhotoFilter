@@ -11,7 +11,7 @@ class CustomCell: UICollectionViewCell {
     let imageForFilter: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.contentMode = .scaleAspectFit
+        image.contentMode = .scaleAspectFill
         image.layer.cornerRadius = 8
         image.layer.masksToBounds = true
         return image
