@@ -22,6 +22,7 @@ protocol HomeScreenInterface: AnyObject {
     func reloadData()
     func configureShareButton()
     func configureSaveButton()
+    func configureShowOriginalButton()
     
 }
 final class HomeScreen: UIViewController {
@@ -35,6 +36,8 @@ final class HomeScreen: UIViewController {
     private let imagePickerButton = UIButton()
     private let shareButton = UIButton()
     private let saveButton = UIButton()
+    private let showOriginalButton = UIButton()
+    private var selectedIndex: Int?
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.view = self
@@ -52,7 +55,6 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     
     func configureVC() {
         imagePicker.delegate = self
-        view.backgroundColor = .red
         
     }
     func configureStackView() {
@@ -72,19 +74,6 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
             
         ])
     }
-//    func configureInputView() {
-//        imageViewInput.translatesAutoresizingMaskIntoConstraints = false
-//        imageViewInput.image = UIImage(named: "default")
-//        imageViewInput.layer.cornerRadius = 12
-//        imageViewInput.layer.masksToBounds = true
-//        imageViewInput.contentMode = .scaleAspectFit
-//        imageViewInput.backgroundColor = .white
-//        stackView.addArrangedSubview(imageViewInput)
-//        NSLayoutConstraint.activate([
-//            imageViewInput.widthAnchor.constraint(equalToConstant: view.frame.size.width),
-//            imageViewInput.heightAnchor.constraint(equalToConstant: view.frame.size.height/3.5)
-//        ])
-//    }
     func configureCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -107,7 +96,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         imageViewOutput.image = UIImage(named: "default")
         imageViewOutput.layer.cornerRadius = 12
         imageViewOutput.layer.masksToBounds = true
-        imageViewOutput.contentMode = .scaleAspectFit
+        imageViewOutput.contentMode = .scaleAspectFill
         imageViewOutput.backgroundColor = .lightText
         stackView.addArrangedSubview(imageViewOutput)
         NSLayoutConstraint.activate([
@@ -118,7 +107,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     func configureImagePickerButton() {
         imagePickerButton.translatesAutoresizingMaskIntoConstraints = false
         imagePickerButton.backgroundColor = .lightGray
-        imagePickerButton.setTitle("Fotoğraf Seç", for: .normal)
+        imagePickerButton.setTitle("Select Photo", for: .normal)
         imagePickerButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         imagePickerButton.layer.cornerRadius = 12
         imagePickerButton.layer.masksToBounds = true
@@ -128,14 +117,13 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         shareButton.setTitle("Share", for: .normal)
         shareButton.setTitleColor(.black, for: .normal)
         shareButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .regular)
-        
         shareButton.setTitleShadowColor(.black, for: .normal)
         shareButton.translatesAutoresizingMaskIntoConstraints = false
         shareButton.layer.cornerRadius = 12
         shareButton.layer.masksToBounds = true
         shareButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
         imageViewOutput.isUserInteractionEnabled = true
-        let blurEffect = UIBlurEffect(style: .light)
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
         let blurView = UIVisualEffectView(effect: blurEffect)
         blurView.isUserInteractionEnabled = false
         blurView.frame = shareButton.bounds
@@ -164,7 +152,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         saveButton.layer.masksToBounds = true
         saveButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
         imageViewOutput.isUserInteractionEnabled = true
-        let blurEffect = UIBlurEffect(style: .light)
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
         let blurView = UIVisualEffectView(effect: blurEffect)
         blurView.isUserInteractionEnabled = false
         blurView.frame = saveButton.bounds
@@ -182,18 +170,71 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         
     }
+    func configureShowOriginalButton() {
+        showOriginalButton.translatesAutoresizingMaskIntoConstraints = false
+        showOriginalButton.setTitle("Original", for: .normal)
+        showOriginalButton.setTitleColor(.black, for: .normal)
+        showOriginalButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .regular)
+        showOriginalButton.setTitleShadowColor(.black, for: .normal)
+        showOriginalButton.translatesAutoresizingMaskIntoConstraints = false
+        showOriginalButton.layer.cornerRadius = 12
+        showOriginalButton.layer.masksToBounds = true
+        showOriginalButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        showOriginalButton.isUserInteractionEnabled = true
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.isUserInteractionEnabled = false
+        blurView.frame = showOriginalButton.bounds
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        showOriginalButton.insertSubview(blurView, at: 0)
+        blurView.leadingAnchor.constraint(equalTo: showOriginalButton.leadingAnchor).isActive = true
+        blurView.trailingAnchor.constraint(equalTo: showOriginalButton.trailingAnchor).isActive = true
+        blurView.topAnchor.constraint(equalTo: showOriginalButton.topAnchor).isActive = true
+        blurView.bottomAnchor.constraint(equalTo: showOriginalButton.bottomAnchor).isActive = true
+        imageViewOutput.addSubview(showOriginalButton)
+        NSLayoutConstraint.activate([
+            showOriginalButton.trailingAnchor.constraint(equalTo: imageViewOutput.trailingAnchor, constant: -10),
+            showOriginalButton.bottomAnchor.constraint(equalTo: imageViewOutput.bottomAnchor, constant: -10)
+        ])
+        showOriginalButton.addTarget(self, action: #selector(showOriginalButtonTapped), for: .touchDown)
+        
+        showOriginalButton.addTarget(self, action: #selector(showOriginalButtonTappedOutside), for: .touchUpInside)
+        showOriginalButton.addTarget(self, action: #selector(showOriginalButtonTappedOutside), for: .touchUpOutside)
+
+    }
+    @objc func showOriginalButtonTapped() {
+        print("showOriginalButtonTapped")
+        if imageViewOutput.image != UIImage(named: "default") {
+            imageViewOutput.image = imageViewInput.image
+        }
+    }
+    @objc func showOriginalButtonTappedOutside() {
+        if imageViewOutput.image != UIImage(named: "default") {
+            guard let index = selectedIndex, index < imageCollection.count else {
+                return
+            }
+            print("Show last photos in results")
+            imageViewOutput.image = imageCollection[index]
+        } else {
+            alertNoAction(message: "Not Found The Photo")
+        }
+    }
     @objc func saveButtonTapped() {
         print("saveButtonTapped")
         guard let imageToSave = imageViewOutput.image else {
                 alertNoAction(message: "Not found photo")
         return
         }
-        UIImageWriteToSavedPhotosAlbum(imageToSave, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
-        
+        if imageViewOutput.image != UIImage(named: "default") {
+            UIImageWriteToSavedPhotosAlbum(imageToSave, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+            alertNoAction(message: "Save Successful")
+        } else {
+            alertNoAction(message: "Not Found The Photo")
+        }
     }
     @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
         if let error = error {
-            print("Resim kaydedilirken bir hata oluştu: \(error.localizedDescription)")
+            print("Found error at saving the image: \(error.localizedDescription)")
         } else {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
@@ -289,97 +330,109 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         imageViewOutput.image = imageCollection[indexPath.item]
+        
+        selectImage(at: indexPath.item)
+        
         print("index: \(indexPath.item + 1)")
+        
+        
     }
+    ///selectImage func for take the index for change original
+    func selectImage(at index: Int) {
+        if index < imageCollection.count {
+            imageViewOutput.image = imageCollection[index]
+            selectedIndex = index
+        }
+    }
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            let data: Data? = pickedImage.jpegData(compressionQuality: 0)
-            let resultImage = UIImage(data: data!)
+        if let resultImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            
             imageViewInput.image = resultImage
             imageCollection.removeAll()
             
             let imageService = ImageFilterService()
                 DispatchQueue.main.async {
-                    let outputImageVibrance = imageService.applyVibrance(to: resultImage ?? .default, amount: 2.0)
+                    let outputImageVibrance = imageService.applyVibrance(to: resultImage , amount: 2.0)
                     self.imageCollection.append(outputImageVibrance ?? .default)
-                    let outputImageMonochrom = imageService.applyMonochrom(to: resultImage ?? .default, color: CIColor(red: 1, green: 0, blue: 0), intensity: 1.0)
+                    let outputImageMonochrom = imageService.applyMonochrom(to: resultImage, color: CIColor(red: 1, green: 0, blue: 0), intensity: 1.0)
                     self.imageCollection.append(outputImageMonochrom ?? .default)
-                    let outputImageColorControl = imageService.applyColorControl(to: resultImage ?? .default, brightness: -0.4, contrast: 1.0, saturation: 0.5)
+                    let outputImageColorControl = imageService.applyColorControl(to: resultImage, brightness: -0.4, contrast: 1.0, saturation: 0.5)
                     self.imageCollection.append(outputImageColorControl ?? .default)
-                    let outputImagePixellate = imageService.applyPixellate(to: resultImage ?? .default, center: CGPoint(x: 150, y: 150), scale: 30)
+                    let outputImagePixellate = imageService.applyPixellate(to: resultImage, center: CGPoint(x: 150, y: 150), scale: 30)
                     self.imageCollection.append(outputImagePixellate ?? .default)
                     
-                    let outputImageHexagonalPixellate = imageService.applyHexagonalPixellate(to: resultImage ?? .default)
+                    let outputImageHexagonalPixellate = imageService.applyHexagonalPixellate(to: resultImage)
                     self.imageCollection.append(outputImageHexagonalPixellate ?? .default)
-                    let outputImageBoxBlur = imageService.applyBoxBlur(to: resultImage ?? .default)
+                    let outputImageBoxBlur = imageService.applyBoxBlur(to: resultImage)
                     self.imageCollection.append(outputImageBoxBlur ?? .default)
-                    let outputColorInvert = imageService.applyColorInvert(to: resultImage ?? .default)
+                    let outputColorInvert = imageService.applyColorInvert(to: resultImage)
                     self.imageCollection.append(outputColorInvert ?? .default)
-                    let outputMinimumComponent = imageService.applyMinimumComponent(to: resultImage ?? .default)
+                    let outputMinimumComponent = imageService.applyMinimumComponent(to: resultImage)
                     self.imageCollection.append(outputMinimumComponent ?? .default)
-                    let outputColorControl = imageService.applyColorControl(to: resultImage ?? .default)
+                    let outputColorControl = imageService.applyColorControl(to: resultImage)
                     self.imageCollection.append(outputColorControl ?? .default)
                     
-                    let outputCircularScreen = imageService.applyCircularScreen(to: resultImage ?? .default)
+                    let outputCircularScreen = imageService.applyCircularScreen(to: resultImage)
                     self.imageCollection.append(outputCircularScreen ?? .default)
                     
-                    let outputToneCurve = imageService.applyToneCurve(to: resultImage ?? .default)
+                    let outputToneCurve = imageService.applyToneCurve(to: resultImage)
                     self.imageCollection.append(outputToneCurve ?? .default)
                     
-                    let outputTemperatureAndTint = imageService.applyTemperatureAndTint(to: resultImage ?? .default)
+                    let outputTemperatureAndTint = imageService.applyTemperatureAndTint(to: resultImage)
                     self.imageCollection.append(outputTemperatureAndTint ?? .default)
                     
-                    let outputSRGBToneCurveToLinear = imageService.applySRGBToneCurveToLinear(to: resultImage ?? .default)
+                    let outputSRGBToneCurveToLinear = imageService.applySRGBToneCurveToLinear(to: resultImage)
                     self.imageCollection.append(outputSRGBToneCurveToLinear ?? .default)
                     
-                    let outputPhotoEffectTransfer = imageService.applyPhotoEffectTransfer(to: resultImage ?? .default)
+                    let outputPhotoEffectTransfer = imageService.applyPhotoEffectTransfer(to: resultImage)
                     self.imageCollection.append(outputPhotoEffectTransfer ?? .default)
                     
-                    let outputPhotoEffectNoir = imageService.applyPhotoEffectNoir(to: resultImage ?? .default)
+                    let outputPhotoEffectNoir = imageService.applyPhotoEffectNoir(to: resultImage)
                     self.imageCollection.append(outputPhotoEffectNoir ?? .default)
                     
-                    let outputPhotoEffectMono = imageService.applyPhotoEffectMono(to: resultImage ?? .default)
+                    let outputPhotoEffectMono = imageService.applyPhotoEffectMono(to: resultImage)
                     self.imageCollection.append(outputPhotoEffectMono ?? .default)
                     
-                    let outputPhotoEffectInstant = imageService.applyPhotoEffectInstant(to: resultImage ?? .default)
+                    let outputPhotoEffectInstant = imageService.applyPhotoEffectInstant(to: resultImage)
                     self.imageCollection.append(outputPhotoEffectInstant ?? .default)
                     
-                    let outputPhotoEffectFade = imageService.applyPhotoEffectFade(to: resultImage ?? .default)
+                    let outputPhotoEffectFade = imageService.applyPhotoEffectFade(to: resultImage)
                     self.imageCollection.append(outputPhotoEffectFade ?? .default)
                     
-                    let outputNoiseReduction = imageService.applyNoiseReduction(to: resultImage ?? .default)
+                    let outputNoiseReduction = imageService.applyNoiseReduction(to: resultImage)
                     self.imageCollection.append(outputNoiseReduction ?? .default)
                     
-                    let outputMotionBlur = imageService.applyMotionBlur(to: resultImage ?? .default)
+                    let outputMotionBlur = imageService.applyMotionBlur(to: resultImage)
                     self.imageCollection.append(outputMotionBlur ?? .default)
                     
                     
                     
-                    let outputMedian = imageService.applyMedian(to: resultImage ?? .default)
+                    let outputMedian = imageService.applyMedian(to: resultImage)
                     self.imageCollection.append(outputMedian ?? .default)
                     
-                    let outputLinearToSRGBTCurve = imageService.applyLinearToSRGBToneCurve(to: resultImage ?? .default)
+                    let outputLinearToSRGBTCurve = imageService.applyLinearToSRGBToneCurve(to: resultImage)
                     self.imageCollection.append(outputLinearToSRGBTCurve ?? .default)
                     
-                    let outputHueAdjust = imageService.applyHueAdjuc(to: resultImage ?? .default)
+                    let outputHueAdjust = imageService.applyHueAdjuc(to: resultImage)
                     self.imageCollection.append(outputHueAdjust ?? .default)
                     
-                    let outputHatchedScreen = imageService.applyHatchedScreen(to: resultImage ?? .default)
+                    let outputHatchedScreen = imageService.applyHatchedScreen(to: resultImage)
                     self.imageCollection.append(outputHatchedScreen ?? .default)
                     
-                    let outputGammaAdjust = imageService.applyGammaAdjust(to: resultImage ?? .default)
+                    let outputGammaAdjust = imageService.applyGammaAdjust(to: resultImage)
                     self.imageCollection.append(outputGammaAdjust ?? .default)
                     
-                    let outputFalseColor = imageService.applyFalseColor(to: resultImage ?? .default)
+                    let outputFalseColor = imageService.applyFalseColor(to: resultImage)
                     self.imageCollection.append(outputFalseColor ?? .default)
                     
-                    let outputEdgeWork = imageService.applyEdgeWork(to: resultImage ?? .default)
+                    let outputEdgeWork = imageService.applyEdgeWork(to: resultImage,radius: 2)
                     self.imageCollection.append(outputEdgeWork ?? .default)
                     
-                    let outputDotScreen = imageService.applyDotScreen(to: resultImage ?? .default)
+                    let outputDotScreen = imageService.applyDotScreen(to: resultImage)
                     self.imageCollection.append(outputDotScreen ?? .default)
                     
-                    let outputDocumentEnhancer = imageService.applyDocumentEnhancer(to: resultImage ?? .default)
+                    let outputDocumentEnhancer = imageService.applyDocumentEnhancer(to: resultImage)
                     self.imageCollection.append(outputDocumentEnhancer ?? .default)
 //                    
 //                    let outputDither = imageService.applyDither(to: pickedImage)
