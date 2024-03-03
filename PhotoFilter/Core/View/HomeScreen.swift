@@ -21,6 +21,7 @@ protocol HomeScreenInterface: AnyObject {
     func openCamera()
     func reloadData()
     func configureShareButton()
+    func configureSaveButton()
     
 }
 final class HomeScreen: UIViewController {
@@ -33,6 +34,7 @@ final class HomeScreen: UIViewController {
     private lazy var imageCollection = [UIImage]()
     private let imagePickerButton = UIButton()
     private let shareButton = UIButton()
+    private let saveButton = UIButton()
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.view = self
@@ -123,31 +125,6 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         stackView.addArrangedSubview(imagePickerButton)
     }
     func configureShareButton() {
-//        shareButton.translatesAutoresizingMaskIntoConstraints = false
-//        shareButton.setTitle("Share", for: .normal)
-//        shareButton.setTitleColor(.black, for: .normal)
-//        //shareButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
-////        shareButton.setTitleShadowColor(.black, for: .normal)
-//        let blur = UIBlurEffect(style: .light)
-//        let blurView = UIVisualEffectView(effect: blur)
-//        blurView.translatesAutoresizingMaskIntoConstraints = false
-//        shareButton.frame = .zero
-//        blurView.frame = .zero
-//        shareButton.backgroundColor = .clear
-//        shareButton.layer.cornerRadius = 10
-//        shareButton.layer.masksToBounds = true
-//        blurView.contentView.addSubview(shareButton)
-//        blurView.leadingAnchor.constraint(equalTo: shareButton.leadingAnchor).isActive = true
-//        blurView.trailingAnchor.constraint(equalTo: shareButton.trailingAnchor).isActive = true
-//        blurView.topAnchor.constraint(equalTo: shareButton.topAnchor).isActive = true
-//        blurView.bottomAnchor.constraint(equalTo: shareButton.bottomAnchor).isActive = true
-//        imageViewOutput.addSubview(blurView)
-//        NSLayoutConstraint.activate([
-//            shareButton.leadingAnchor.constraint(equalTo: imageViewOutput.leadingAnchor, constant: 10),
-//            shareButton.topAnchor.constraint(equalTo: imageViewOutput.topAnchor, constant: 10)
-//        ])
-//        shareButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
-        
         shareButton.setTitle("Share", for: .normal)
         shareButton.setTitleColor(.black, for: .normal)
         shareButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .regular)
@@ -175,10 +152,55 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
             shareButton.topAnchor.constraint(equalTo: imageViewOutput.topAnchor, constant: 10)
         ])
         shareButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
-
-
     }
-    
+    func configureSaveButton() {
+        saveButton.translatesAutoresizingMaskIntoConstraints = false
+        saveButton.setTitle("Save", for: .normal)
+        saveButton.setTitleColor(.black, for: .normal)
+        saveButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .regular)
+        saveButton.setTitleShadowColor(.black, for: .normal)
+        saveButton.translatesAutoresizingMaskIntoConstraints = false
+        saveButton.layer.cornerRadius = 12
+        saveButton.layer.masksToBounds = true
+        saveButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
+        imageViewOutput.isUserInteractionEnabled = true
+        let blurEffect = UIBlurEffect(style: .light)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.isUserInteractionEnabled = false
+        blurView.frame = saveButton.bounds
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        saveButton.insertSubview(blurView, at: 0)
+        blurView.leadingAnchor.constraint(equalTo: saveButton.leadingAnchor).isActive = true
+        blurView.trailingAnchor.constraint(equalTo: saveButton.trailingAnchor).isActive = true
+        blurView.topAnchor.constraint(equalTo: saveButton.topAnchor).isActive = true
+        blurView.bottomAnchor.constraint(equalTo: saveButton.bottomAnchor).isActive = true
+        imageViewOutput.addSubview(saveButton)
+        NSLayoutConstraint.activate([
+            saveButton.leadingAnchor.constraint(equalTo: imageViewOutput.leadingAnchor, constant: 10),
+            saveButton.bottomAnchor.constraint(equalTo: imageViewOutput.bottomAnchor, constant: -10)
+        ])
+        saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+        
+    }
+    @objc func saveButtonTapped() {
+        print("saveButtonTapped")
+        guard let imageToSave = imageViewOutput.image else {
+                alertNoAction(message: "Not found photo")
+        return
+        }
+        UIImageWriteToSavedPhotosAlbum(imageToSave, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        
+    }
+    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        if let error = error {
+            print("Resim kaydedilirken bir hata oluştu: \(error.localizedDescription)")
+        } else {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+            let filename = "imageBySukruSimsek_\(dateFormatter.string(from: .now)).jpg"
+            print("Image saved to gallery with filename: \(filename)")
+        }
+    }
     @objc func shareButtonTapped() {
         print("shareButtonTapped")
         if imageViewOutput.image != UIImage(named: "default") {
@@ -187,13 +209,8 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
             activityViewController.popoverPresentationController?.sourceView = self.view
             self.present(activityViewController, animated: true)
         } else {
-            let alertController = UIAlertController(title: "", message: "Not found the photo", preferredStyle: .alert)
-            self.present(alertController, animated: true)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
-                alertController.dismiss(animated: true)
-            }
+            alertNoAction(message: "Not Found The Photo")
         }
-        
     }
     @objc func buttonTapped() {
         print("button tapped")

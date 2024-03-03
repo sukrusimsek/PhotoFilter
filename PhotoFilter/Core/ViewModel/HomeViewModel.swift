@@ -25,6 +25,7 @@ extension HomeViewModel: HomeViewModelInterface {
         view?.configureImagePickerButton()
         view?.configureCollectionView()
         view?.configureShareButton()
+        view?.configureSaveButton()
     }
     func applyFiltersOnCollectionView() {
         //We will change our filter funcs. They will be here. Because we're using MVVM Design Pattern.
