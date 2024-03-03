@@ -20,13 +20,14 @@ extension HomeViewModel: HomeViewModelInterface {
     func viewDidLoad() {
         view?.configureVC()
         view?.configureStackView()
-        view?.configureInputView()
+        view?.configureOutputView()
+        //view?.configureInputView()
         view?.configureImagePickerButton()
         view?.configureCollectionView()
-        view?.configureOutputView()
+        view?.configureShareButton()
     }
     func applyFiltersOnCollectionView() {
-        
+        //We will change our filter funcs. They will be here. Because we're using MVVM Design Pattern.
     }
     
 }

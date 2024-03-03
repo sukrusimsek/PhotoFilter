@@ -13,13 +13,14 @@ protocol HomeScreenInterface: AnyObject {
     func configureVC()
     func configureImagePickerButton()
     func configureStackView()
-    func configureInputView()
+//    func configureInputView()
     func configureCollectionView()
     func configureOutputView()
     func useCamera()
     func openGallery()
     func openCamera()
     func reloadData()
+    func configureShareButton()
     
 }
 final class HomeScreen: UIViewController {
@@ -30,7 +31,8 @@ final class HomeScreen: UIViewController {
     private var collectionView: UICollectionView!
     private lazy var imageViewOutput = UIImageView()
     private lazy var imageCollection = [UIImage]()
-    private let button = UIButton()
+    private let imagePickerButton = UIButton()
+    private let shareButton = UIButton()
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.view = self
@@ -48,6 +50,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     
     func configureVC() {
         imagePicker.delegate = self
+        view.backgroundColor = .red
         
     }
     func configureStackView() {
@@ -67,19 +70,19 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
             
         ])
     }
-    func configureInputView() {
-        imageViewInput.translatesAutoresizingMaskIntoConstraints = false
-        imageViewInput.image = UIImage(named: "default")
-        imageViewInput.layer.cornerRadius = 12
-        imageViewInput.layer.masksToBounds = true
-        imageViewInput.contentMode = .scaleAspectFit
-        imageViewInput.backgroundColor = .white
-        stackView.addArrangedSubview(imageViewInput)
-        NSLayoutConstraint.activate([
-            imageViewInput.widthAnchor.constraint(equalToConstant: view.frame.size.width),
-            imageViewInput.heightAnchor.constraint(equalToConstant: view.frame.size.height/3.5)
-        ])
-    }
+//    func configureInputView() {
+//        imageViewInput.translatesAutoresizingMaskIntoConstraints = false
+//        imageViewInput.image = UIImage(named: "default")
+//        imageViewInput.layer.cornerRadius = 12
+//        imageViewInput.layer.masksToBounds = true
+//        imageViewInput.contentMode = .scaleAspectFit
+//        imageViewInput.backgroundColor = .white
+//        stackView.addArrangedSubview(imageViewInput)
+//        NSLayoutConstraint.activate([
+//            imageViewInput.widthAnchor.constraint(equalToConstant: view.frame.size.width),
+//            imageViewInput.heightAnchor.constraint(equalToConstant: view.frame.size.height/3.5)
+//        ])
+//    }
     func configureCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -107,17 +110,90 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         stackView.addArrangedSubview(imageViewOutput)
         NSLayoutConstraint.activate([
             imageViewOutput.widthAnchor.constraint(equalToConstant: view.frame.size.width),
-            imageViewOutput.heightAnchor.constraint(equalToConstant: view.frame.size.height/3.5)
+            imageViewOutput.heightAnchor.constraint(equalToConstant: view.frame.size.height/1.75)
         ])
     }
     func configureImagePickerButton() {
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .lightGray
-        button.setTitle("Fotoğraf Seç", for: .normal)
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-        button.layer.cornerRadius = 12
-        button.layer.masksToBounds = true
-        stackView.addArrangedSubview(button)
+        imagePickerButton.translatesAutoresizingMaskIntoConstraints = false
+        imagePickerButton.backgroundColor = .lightGray
+        imagePickerButton.setTitle("Fotoğraf Seç", for: .normal)
+        imagePickerButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        imagePickerButton.layer.cornerRadius = 12
+        imagePickerButton.layer.masksToBounds = true
+        stackView.addArrangedSubview(imagePickerButton)
+    }
+    func configureShareButton() {
+//        shareButton.translatesAutoresizingMaskIntoConstraints = false
+//        shareButton.setTitle("Share", for: .normal)
+//        shareButton.setTitleColor(.black, for: .normal)
+//        //shareButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+////        shareButton.setTitleShadowColor(.black, for: .normal)
+//        let blur = UIBlurEffect(style: .light)
+//        let blurView = UIVisualEffectView(effect: blur)
+//        blurView.translatesAutoresizingMaskIntoConstraints = false
+//        shareButton.frame = .zero
+//        blurView.frame = .zero
+//        shareButton.backgroundColor = .clear
+//        shareButton.layer.cornerRadius = 10
+//        shareButton.layer.masksToBounds = true
+//        blurView.contentView.addSubview(shareButton)
+//        blurView.leadingAnchor.constraint(equalTo: shareButton.leadingAnchor).isActive = true
+//        blurView.trailingAnchor.constraint(equalTo: shareButton.trailingAnchor).isActive = true
+//        blurView.topAnchor.constraint(equalTo: shareButton.topAnchor).isActive = true
+//        blurView.bottomAnchor.constraint(equalTo: shareButton.bottomAnchor).isActive = true
+//        imageViewOutput.addSubview(blurView)
+//        NSLayoutConstraint.activate([
+//            shareButton.leadingAnchor.constraint(equalTo: imageViewOutput.leadingAnchor, constant: 10),
+//            shareButton.topAnchor.constraint(equalTo: imageViewOutput.topAnchor, constant: 10)
+//        ])
+//        shareButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
+        
+        shareButton.setTitle("Share", for: .normal)
+        shareButton.setTitleColor(.black, for: .normal)
+        shareButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .regular)
+        
+        shareButton.setTitleShadowColor(.black, for: .normal)
+        shareButton.translatesAutoresizingMaskIntoConstraints = false
+        shareButton.layer.cornerRadius = 12
+        shareButton.layer.masksToBounds = true
+        shareButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
+        imageViewOutput.isUserInteractionEnabled = true
+        let blurEffect = UIBlurEffect(style: .light)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.isUserInteractionEnabled = false
+        blurView.frame = shareButton.bounds
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        shareButton.insertSubview(blurView, at: 0)
+        blurView.leadingAnchor.constraint(equalTo: shareButton.leadingAnchor).isActive = true
+        blurView.trailingAnchor.constraint(equalTo: shareButton.trailingAnchor).isActive = true
+        blurView.topAnchor.constraint(equalTo: shareButton.topAnchor).isActive = true
+        blurView.bottomAnchor.constraint(equalTo: shareButton.bottomAnchor).isActive = true
+        
+        imageViewOutput.addSubview(shareButton)
+        NSLayoutConstraint.activate([
+            shareButton.leadingAnchor.constraint(equalTo: imageViewOutput.leadingAnchor, constant: 10),
+            shareButton.topAnchor.constraint(equalTo: imageViewOutput.topAnchor, constant: 10)
+        ])
+        shareButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
+
+
+    }
+    
+    @objc func shareButtonTapped() {
+        print("shareButtonTapped")
+        if imageViewOutput.image != UIImage(named: "default") {
+            let imageShare = [imageViewOutput.image]
+            let activityViewController = UIActivityViewController(activityItems: imageShare as [Any], applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = self.view
+            self.present(activityViewController, animated: true)
+        } else {
+            let alertController = UIAlertController(title: "", message: "Not found the photo", preferredStyle: .alert)
+            self.present(alertController, animated: true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
+                alertController.dismiss(animated: true)
+            }
+        }
+        
     }
     @objc func buttonTapped() {
         print("button tapped")
