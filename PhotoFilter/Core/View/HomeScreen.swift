@@ -346,112 +346,75 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let resultImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+        if let result = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            let data = result.jpegData(compressionQuality: 0.0) // 0.0 ile 1.0 arasında bir değer seçin, 0.0 en düşük kalite
+            let compressedImage = UIImage(data: data!)
+            let thumbImage = result.wxCompress()
             
+//            imageViewInput.image = resultImage
+            let resultImage = thumbImage
             imageViewInput.image = resultImage
             imageCollection.removeAll()
             
             let imageService = ImageFilterService()
                 DispatchQueue.main.async {
-                    let outputImageVibrance = imageService.applyVibrance(to: resultImage , amount: 2.0)
+                    let outputImageVibrance = imageService.applyVibrance(to: resultImage, amount: 2.0)
                     self.imageCollection.append(outputImageVibrance ?? .default)
-                    let outputImageMonochrom = imageService.applyMonochrom(to: resultImage, color: CIColor(red: 1, green: 0, blue: 0), intensity: 1.0)
-                    self.imageCollection.append(outputImageMonochrom ?? .default)
-                    let outputImageColorControl = imageService.applyColorControl(to: resultImage, brightness: -0.4, contrast: 1.0, saturation: 0.5)
-                    self.imageCollection.append(outputImageColorControl ?? .default)
-                    let outputImagePixellate = imageService.applyPixellate(to: resultImage, center: CGPoint(x: 150, y: 150), scale: 30)
-                    self.imageCollection.append(outputImagePixellate ?? .default)
-                    
-                    let outputImageHexagonalPixellate = imageService.applyHexagonalPixellate(to: resultImage)
-                    self.imageCollection.append(outputImageHexagonalPixellate ?? .default)
-                    let outputImageBoxBlur = imageService.applyBoxBlur(to: resultImage)
-                    self.imageCollection.append(outputImageBoxBlur ?? .default)
-                    let outputColorInvert = imageService.applyColorInvert(to: resultImage)
-                    self.imageCollection.append(outputColorInvert ?? .default)
-                    let outputMinimumComponent = imageService.applyMinimumComponent(to: resultImage)
-                    self.imageCollection.append(outputMinimumComponent ?? .default)
-                    let outputColorControl = imageService.applyColorControl(to: resultImage)
-                    self.imageCollection.append(outputColorControl ?? .default)
-                    
-                    let outputCircularScreen = imageService.applyCircularScreen(to: resultImage)
-                    self.imageCollection.append(outputCircularScreen ?? .default)
-                    
                     let outputToneCurve = imageService.applyToneCurve(to: resultImage)
                     self.imageCollection.append(outputToneCurve ?? .default)
-                    
                     let outputTemperatureAndTint = imageService.applyTemperatureAndTint(to: resultImage)
                     self.imageCollection.append(outputTemperatureAndTint ?? .default)
-                    
-                    let outputSRGBToneCurveToLinear = imageService.applySRGBToneCurveToLinear(to: resultImage)
-                    self.imageCollection.append(outputSRGBToneCurveToLinear ?? .default)
-                    
                     let outputPhotoEffectTransfer = imageService.applyPhotoEffectTransfer(to: resultImage)
                     self.imageCollection.append(outputPhotoEffectTransfer ?? .default)
-                    
-                    let outputPhotoEffectNoir = imageService.applyPhotoEffectNoir(to: resultImage)
-                    self.imageCollection.append(outputPhotoEffectNoir ?? .default)
-                    
-                    let outputPhotoEffectMono = imageService.applyPhotoEffectMono(to: resultImage)
-                    self.imageCollection.append(outputPhotoEffectMono ?? .default)
-                    
                     let outputPhotoEffectInstant = imageService.applyPhotoEffectInstant(to: resultImage)
                     self.imageCollection.append(outputPhotoEffectInstant ?? .default)
-                    
-                    let outputPhotoEffectFade = imageService.applyPhotoEffectFade(to: resultImage)
-                    self.imageCollection.append(outputPhotoEffectFade ?? .default)
-                    
-                    let outputNoiseReduction = imageService.applyNoiseReduction(to: resultImage)
-                    self.imageCollection.append(outputNoiseReduction ?? .default)
-                    
-                    let outputMotionBlur = imageService.applyMotionBlur(to: resultImage)
-                    self.imageCollection.append(outputMotionBlur ?? .default)
-                    
-                    
-                    
+                    let outputDither = imageService.applyDither(to: resultImage)
+                    self.imageCollection.append(outputDither ?? .default)
+                    let outputSRGBToneCurveToLinear = imageService.applySRGBToneCurveToLinear(to: resultImage)
+                    self.imageCollection.append(outputSRGBToneCurveToLinear ?? .default)
                     let outputMedian = imageService.applyMedian(to: resultImage)
                     self.imageCollection.append(outputMedian ?? .default)
+                    let outputImagePixellate = imageService.applyPixellate(to: resultImage, center: CGPoint(x: 150, y: 150), scale: 5)
+                    self.imageCollection.append(outputImagePixellate ?? .default)
+                    let outputImageHexagonalPixellate = imageService.applyHexagonalPixellate(to: resultImage, scale: 10)
+                    self.imageCollection.append(outputImageHexagonalPixellate ?? .default)
+                    let outputNoiseReduction = imageService.applyNoiseReduction(to: resultImage)
+                    self.imageCollection.append(outputNoiseReduction ?? .default)
+                    let outputPhotoEffectFade = imageService.applyPhotoEffectFade(to: resultImage)
+                    self.imageCollection.append(outputPhotoEffectFade ?? .default)
+                    //Darkfilters
+                    let outputPhotoEffectNoir = imageService.applyPhotoEffectNoir(to: resultImage)
+                    self.imageCollection.append(outputPhotoEffectNoir ?? .default)
+                    let outputMinimumComponent = imageService.applyMinimumComponent(to: resultImage)
+                    self.imageCollection.append(outputMinimumComponent ?? .default)
+                    let outputPhotoEffectMono = imageService.applyPhotoEffectMono(to: resultImage)
+                    self.imageCollection.append(outputPhotoEffectMono ?? .default)
+                    let outputImageColorControl = imageService.applyColorControl(to: resultImage, brightness: -0.4, contrast: 1.0, saturation: 0.5)
+                    self.imageCollection.append(outputImageColorControl ?? .default)
                     
-                    let outputLinearToSRGBTCurve = imageService.applyLinearToSRGBToneCurve(to: resultImage)
-                    self.imageCollection.append(outputLinearToSRGBTCurve ?? .default)
+                    let outputColorControl = imageService.applyColorControl(to: resultImage)
+                    self.imageCollection.append(outputColorControl ?? .default)
+                    let outputGammaAdjust = imageService.applyGammaAdjust(to: resultImage)
+                    self.imageCollection.append(outputGammaAdjust ?? .default)
                     
                     let outputHueAdjust = imageService.applyHueAdjuc(to: resultImage)
                     self.imageCollection.append(outputHueAdjust ?? .default)
                     
-                    let outputHatchedScreen = imageService.applyHatchedScreen(to: resultImage)
-                    self.imageCollection.append(outputHatchedScreen ?? .default)
-                    
-                    let outputGammaAdjust = imageService.applyGammaAdjust(to: resultImage)
-                    self.imageCollection.append(outputGammaAdjust ?? .default)
-                    
                     let outputFalseColor = imageService.applyFalseColor(to: resultImage)
                     self.imageCollection.append(outputFalseColor ?? .default)
-                    
-                    let outputEdgeWork = imageService.applyEdgeWork(to: resultImage,radius: 2)
+                    let outputCircularScreen = imageService.applyCircularScreen(to: resultImage,sharpness: 0.35, width: 20)
+                    self.imageCollection.append(outputCircularScreen ?? .default)
+
+                    let outputHatchedScreen = imageService.applyHatchedScreen(to: resultImage)
+                    self.imageCollection.append(outputHatchedScreen ?? .default)
+
+                    let outputEdgeWork = imageService.applyEdgeWork(to: resultImage,radius: 1)
                     self.imageCollection.append(outputEdgeWork ?? .default)
                     
-                    let outputDotScreen = imageService.applyDotScreen(to: resultImage)
-                    self.imageCollection.append(outputDotScreen ?? .default)
+                    let outputComicEffect = imageService.applyComicEffect(to: resultImage)
+                    self.imageCollection.append(outputComicEffect ?? .default)
                     
-                    let outputDocumentEnhancer = imageService.applyDocumentEnhancer(to: resultImage)
-                    self.imageCollection.append(outputDocumentEnhancer ?? .default)
-//                    
-//                    let outputDither = imageService.applyDither(to: pickedImage)
-//                    self?.imageCollection.append(outputDither ?? .default)
-//                    
-//                    let outputCrystallize = imageService.applyCrystallize(to: pickedImage)
-//                    self?.imageCollection.append(outputCrystallize ?? .default)
-//                    
-//                    let outputConvolution3x3 = imageService.applyConvolution3x3(to: pickedImage)
-//                    self?.imageCollection.append(outputConvolution3x3 ?? .default)
-//                    
-//                    let outputConvolution7x7 = imageService.applyConvolution7x7(to: pickedImage)
-//                    self?.imageCollection.append(outputConvolution7x7 ?? .default)
-//                    
-//                    let outputComicEffect = imageService.applyComicEffect(to: pickedImage)
-//                    self?.imageCollection.append(outputComicEffect ?? .default)
-                    
-                    
-                    self.imageViewOutput.image = outputImageMonochrom
+                    self.imageViewOutput.image = outputToneCurve
                     DispatchQueue.main.async {
                         self.collectionView.reloadData()
                     }
@@ -468,3 +431,45 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         }
     }
 }
+
+    func compressImage(_ img:UIImage) -> UIImage? {
+        // Reducing file size to a 10th
+        var actualHeight: CGFloat = img.size.height
+        var actualWidth: CGFloat = img.size.width
+        let maxHeight: CGFloat = 1136.0
+        let maxWidth: CGFloat = 640.0
+        var imgRatio: CGFloat = actualWidth/actualHeight
+        let maxRatio: CGFloat = maxWidth/maxHeight
+        var compressionQuality: CGFloat = 0.5
+        
+        if actualHeight > maxHeight || actualWidth > maxWidth {
+            if imgRatio < maxRatio {
+                //adjust width according to maxHeight
+                imgRatio = maxHeight / actualHeight
+                actualWidth = imgRatio * actualWidth
+                actualHeight = maxHeight
+            } else if imgRatio > maxRatio {
+                //adjust height according to maxWidth
+                imgRatio = maxWidth / actualWidth
+                actualHeight = imgRatio * actualHeight
+                actualWidth = maxWidth
+            } else {
+                actualHeight = maxHeight
+                actualWidth = maxWidth
+                compressionQuality = 1
+            }
+        }
+        let rect = CGRect(x: 0.0, y: 0.0, width: actualWidth, height: actualHeight)
+        UIGraphicsBeginImageContext(rect.size)
+        img.draw(in: rect)
+        guard let img = UIGraphicsGetImageFromCurrentImageContext() else {
+            return nil
+        }
+        UIGraphicsEndImageContext()
+        guard let imageData = img.jpegData(compressionQuality: compressionQuality) else {
+            return nil
+        }
+        return UIImage(data: imageData)
+    }
+   //compressImage(UIImage(named: "tst.jpg")!)
+    

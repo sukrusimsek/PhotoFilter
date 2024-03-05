@@ -21,7 +21,6 @@ extension HomeViewModel: HomeViewModelInterface {
         view?.configureVC()
         view?.configureStackView()
         view?.configureOutputView()
-        //view?.configureInputView()
         view?.configureImagePickerButton()
         view?.configureCollectionView()
         view?.configureShareButton()

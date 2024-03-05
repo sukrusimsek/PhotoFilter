@@ -6,24 +6,20 @@
 //
 
 import UIKit
+import CoreImage
 
 class ImageFilterService {
-    func applyFilter(to inputImage: UIImage, withName filterName: String, parameters: [String: Any] = [:]) -> UIImage? {
-        let context = CIContext(options: nil)
-        guard let ciInput = CIImage(image: inputImage), let filter = CIFilter(name: filterName, parameters: parameters) else { return nil }
-        filter.setValue(ciInput, forKey: kCIInputImageKey)
-        for (key, value) in parameters {
-            filter.setValue(value, forKey: key)
+        func applyFilter(to inputImage: UIImage, withName filterName: String, parameters: [String: Any] = [:]) -> UIImage? {
+            let context = CIContext(options: nil)
+            guard let ciInput = CIImage(image: inputImage), let filter = CIFilter(name: filterName, parameters: parameters) else { return nil }
+            filter.setValue(ciInput, forKey: kCIInputImageKey)
+            for (key, value) in parameters {
+                filter.setValue(value, forKey: key)
+            }
+            guard let outputImage = filter.outputImage, let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else { return nil }
+            return UIImage(cgImage: cgImage)
         }
-        
-        guard let outputImage = filter.outputImage, let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else { return nil }
-        return UIImage(cgImage: cgImage)
-    }
-    
-    func applySepia(to image: UIImage, intensity: Double = 0.8) -> UIImage? {
-        applyFilter(to: image, withName: "CISepiaTone", parameters: [kCIInputIntensityKey: intensity])
-    }
-    
+
     func applyBlur(to image: UIImage, radius: Double = 10.0) -> UIImage? {
         applyFilter(to: image, withName: "CIGaussianBlur", parameters: [kCIInputRadiusKey: radius])
     }
@@ -96,9 +92,7 @@ class ImageFilterService {
     func applyMedian(to image: UIImage) -> UIImage? {
         applyFilter(to: image, withName: "CIMedianFilter")
     }
-//    func applyMaskToAlpha(to image: UIImage)-> UIImage? {
-//        applyFilter(to: image, withName: "CIMaskToAlpha")
-//    }
+
     func applyLinearToSRGBToneCurve(to image: UIImage) -> UIImage? {
         applyFilter(to: image, withName: "CILinearToSRGBToneCurve")
     }
@@ -147,9 +141,6 @@ class ImageFilterService {
     func applyDiscBlur(to image: UIImage, radius: Float = 8)-> UIImage? {
         applyFilter(to: image, withName: "CIDiscBlur", parameters: [kCIInputRadiusKey : radius])
     }
-//    func applyDepthToDisparity(to image: UIImage)-> UIImage? {
-//        applyFilter(to: image, withName: "CIDepthToDisparity")
-//    }
     func applyDepthOfField(to image: UIImage, radius: Float = 5, point0: CIVector = CIVector(x: 2349, y: 846), point1: CIVector = CIVector(x: 571, y: 3121), unSharpMaskRadius: Float = 7, unSharpMaskIntensity: Float = 10)-> UIImage? {
         applyFilter(to: image, withName: "CIDepthOfField", parameters: [kCIInputRadiusKey : radius,
                                                                         "inputPoint0": point0,
@@ -159,30 +150,11 @@ class ImageFilterService {
         applyFilter(to: image, withName: "CIBloom", parameters: [kCIInputRadiusKey : radius,
                                                                kCIInputIntensityKey: intensity])
     }
-    func applyCrystallize(to image: UIImage, radius: Float = 50, center: CIVector = CIVector(x: 2016, y: 1512)) -> UIImage? {
+    func applyCrystallize(to image: UIImage, radius: Float = 5, center: CIVector = CIVector(x: 2016, y: 1512)) -> UIImage? {
         applyFilter(to: image, withName: "CICrystallize", parameters: [kCIInputRadiusKey : radius,
                                                                         kCIInputCenterKey: center])
     }
-    func applyConvolution3x3(to image: UIImage, weights: CIVector = CIVector(values: [
-        0, -2, 0,
-        -2, 9, -2,
-        0, -2, 0
-    ], count: 9), bias: Float = 0)-> UIImage? {
-        applyFilter(to: image, withName: "CIConvolution3X3", parameters: [kCIInputWeightsKey : weights,
-                                                                           kCIInputBiasKey: bias])
-    }
-    func applyConvolution7x7(to image: UIImage, weights: CIVector = CIVector(values: [
-        0, 0, -1, -1, -1, 0, 0,
-        0, -1, -3, -3, -3, -1, 0,
-        -1, -3, 0, 7, 0, -3, -1,
-        -1, -3, 7, 25, 7, -3, -1,
-        -1, -3, 0, 7, 0, -3, -1,
-        0, -1, -3, -3, -3, -1, 0,
-        0, 0, -1, -1, -1, 0, 0
-    ], count: 49), bias: Float = 0)-> UIImage? {
-        applyFilter(to: image, withName: "CIConvolution7X7", parameters: [kCIInputWeightsKey : weights,
-                                                                           kCIInputBiasKey: bias])
-    }
+    
     func applyComicEffect(to image: UIImage) -> UIImage? {
         applyFilter(to: image, withName: "CIComicEffect")
     }
