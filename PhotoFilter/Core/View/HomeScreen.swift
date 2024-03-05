@@ -347,17 +347,14 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let result = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            let data = result.jpegData(compressionQuality: 0.0) // 0.0 ile 1.0 arasında bir değer seçin, 0.0 en düşük kalite
-            let compressedImage = UIImage(data: data!)
-            let thumbImage = result.wxCompress()
-            
-//            imageViewInput.image = resultImage
+            let thumbImage = result.imageCompress()
             let resultImage = thumbImage
             imageViewInput.image = resultImage
             imageCollection.removeAll()
             
             let imageService = ImageFilterService()
                 DispatchQueue.main.async {
+                    
                     let outputImageVibrance = imageService.applyVibrance(to: resultImage, amount: 2.0)
                     self.imageCollection.append(outputImageVibrance ?? .default)
                     let outputToneCurve = imageService.applyToneCurve(to: resultImage)
@@ -376,13 +373,17 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
                     self.imageCollection.append(outputMedian ?? .default)
                     let outputImagePixellate = imageService.applyPixellate(to: resultImage, center: CGPoint(x: 150, y: 150), scale: 5)
                     self.imageCollection.append(outputImagePixellate ?? .default)
+                    let outputImageVibrance2 = imageService.applyVibrance(to: resultImage, amount: 5.0)
+                    self.imageCollection.append(outputImageVibrance2 ?? .default)
                     let outputImageHexagonalPixellate = imageService.applyHexagonalPixellate(to: resultImage, scale: 10)
                     self.imageCollection.append(outputImageHexagonalPixellate ?? .default)
                     let outputNoiseReduction = imageService.applyNoiseReduction(to: resultImage)
                     self.imageCollection.append(outputNoiseReduction ?? .default)
                     let outputPhotoEffectFade = imageService.applyPhotoEffectFade(to: resultImage)
                     self.imageCollection.append(outputPhotoEffectFade ?? .default)
-                    //Darkfilters
+                    let outputPosterize = imageService.applyPosterize(to: resultImage)
+                    self.imageCollection.append(outputPosterize ?? .default)
+
                     let outputPhotoEffectNoir = imageService.applyPhotoEffectNoir(to: resultImage)
                     self.imageCollection.append(outputPhotoEffectNoir ?? .default)
                     let outputMinimumComponent = imageService.applyMinimumComponent(to: resultImage)
@@ -391,8 +392,10 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
                     self.imageCollection.append(outputPhotoEffectMono ?? .default)
                     let outputImageColorControl = imageService.applyColorControl(to: resultImage, brightness: -0.4, contrast: 1.0, saturation: 0.5)
                     self.imageCollection.append(outputImageColorControl ?? .default)
+
                     
-                    let outputColorControl = imageService.applyColorControl(to: resultImage)
+                    
+                    let outputColorControl = imageService.applyColorControl(to: resultImage)//18
                     self.imageCollection.append(outputColorControl ?? .default)
                     let outputGammaAdjust = imageService.applyGammaAdjust(to: resultImage)
                     self.imageCollection.append(outputGammaAdjust ?? .default)
@@ -414,6 +417,15 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
                     let outputComicEffect = imageService.applyComicEffect(to: resultImage)
                     self.imageCollection.append(outputComicEffect ?? .default)
                     
+                    let outputThermal = imageService.applyThermal(to: resultImage)
+                    self.imageCollection.append(outputThermal ?? .default)
+                    
+                    let outputXray = imageService.applyXray(to: resultImage)
+                    self.imageCollection.append(outputXray ?? .default)
+                    
+                    let outputPointillize = imageService.applyPointillize(to: resultImage)
+                    self.imageCollection.append(outputPointillize ?? .default)
+
                     self.imageViewOutput.image = outputToneCurve
                     DispatchQueue.main.async {
                         self.collectionView.reloadData()
