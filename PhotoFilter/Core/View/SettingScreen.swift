@@ -10,7 +10,6 @@ protocol SettingScreenInterface: AnyObject {
     func configureVC()
     func configureTableView()
 }
-
 final class SettingScreen: UIViewController {
     private let viewModel = SettingViewModel()
     let sections = ["SUPPORT", "EXPLORE OTHER APPS", "PRIVACY POLICY & LEGAL NOTICE"]
@@ -23,11 +22,8 @@ final class SettingScreen: UIViewController {
         super.viewDidLoad()
         viewModel.view = self
         viewModel.viewDidLoad()
-        
     }
-    
 }
-
 extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableViewDataSource {
     func configureVC() {
         title = "Settings"
@@ -57,7 +53,6 @@ extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableVie
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
-        
     }
     func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
@@ -77,8 +72,6 @@ extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         cell.backgroundColor = .lightText
-//        cell.layer.cornerRadius = 10
-//        cell.layer.masksToBounds = true
         var iconName = ""
         switch indexPath.section {
         case 0:
@@ -109,6 +102,7 @@ extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableVie
         default:
             break
         }
+        cell.textLabel?.textColor = .black
         cell.imageView?.image = UIImage(systemName: iconName)
         cell.imageView?.tintColor = .black
         return cell
@@ -118,15 +112,99 @@ extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableVie
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        print("index: \(indexPath.row)")
+        switch indexPath.section {
+        case 0:
+            performActionForSection0Row(at: indexPath.row)
+        case 1:
+            performActionForSection1Row(at: indexPath.row)
+        case 2:
+            performActionForSection2Row(at: indexPath.row)
+            // Diğer seçenekler için gerekli kontroller
+        default:
+            break
+        }
+        
+    }
+    func performActionForSection0Row(at index: Int) {
+        switch index {
+        case 0:
+            if let websiteURL = URL(string: "http://www.linkedin.com/in/sukrusimsek") {
+                if UIApplication.shared.canOpenURL(websiteURL) {
+                    UIApplication.shared.open(websiteURL, options: [:], completionHandler: nil)
+                }
+            }
+            break
+        case 1:
+            if let websiteURL = URL(string: "http://www.linkedin.com/in/sukrusimsek") {
+                if UIApplication.shared.canOpenURL(websiteURL) {
+                    UIApplication.shared.open(websiteURL, options: [:], completionHandler: nil)
+                }
+            }
+            break
+        case 2:
+            let textToShare = "Uygulamayı denemelisin!"
+            let appURL = URL(string: "https://apps.apple.com/tr/developer/sukru-simsek/id1728509670?l=tr")!
+
+            let activityViewController = UIActivityViewController(activityItems: [textToShare, appURL], applicationActivities: nil)
+            present(activityViewController, animated: true, completion: nil)
+            break
+        default:
+            break
+        }
+    }
+    func performActionForSection1Row(at index: Int) {
+        switch index {
+        case 0:
+            if let websiteURL = URL(string: "https://apps.apple.com/tr/developer/sukru-simsek/id1728509670?l=tr") {
+                if UIApplication.shared.canOpenURL(websiteURL) {
+                    UIApplication.shared.open(websiteURL, options: [:], completionHandler: nil)
+                }
+            }
+            break
+        case 1:
+            if let websiteURL = URL(string: "http://www.github.com/sukrusimsek") {
+                if UIApplication.shared.canOpenURL(websiteURL) {
+                    UIApplication.shared.open(websiteURL, options: [:], completionHandler: nil)
+                }
+            }
+            break
+        default:
+            break
+        }
+    }
+    func performActionForSection2Row(at index: Int) {
+        switch index {
+        case 0:
+            if let websiteURL = URL(string: "http://www.github.com/sukrusimsek") {
+                if UIApplication.shared.canOpenURL(websiteURL) {
+                    UIApplication.shared.open(websiteURL, options: [:], completionHandler: nil)
+                }
+            }
+            break
+        case 1:
+            if let websiteURL = URL(string: "http://www.github.com/sukrusimsek") {
+                if UIApplication.shared.canOpenURL(websiteURL) {
+                    UIApplication.shared.open(websiteURL, options: [:], completionHandler: nil)
+                }
+            }
+            break
+        case 2:
+            if let websiteURL = URL(string: "http://www.github.com/sukrusimsek") {
+                if UIApplication.shared.canOpenURL(websiteURL) {
+                    UIApplication.shared.open(websiteURL, options: [:], completionHandler: nil)
+                }
+            }
+            break
+        default:
+            break
+        }
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
-        headerView.backgroundColor = UIColor.lightGray
         switch sections[section] {
         case "SUPPORT":
             headerView.backgroundColor = UIColor.red.withAlphaComponent(0.5)
-//            headerView.layer.cornerRadius = 10
-//            headerView.layer.masksToBounds = true
         case "EXPLORE OTHER APPS":
             headerView.backgroundColor = UIColor.blue.withAlphaComponent(0.5)
         case "PRIVACY POLICY & LEGAL NOTICE":
@@ -134,7 +212,6 @@ extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableVie
         default:
             break
         }
-
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = sections[section]
@@ -147,14 +224,9 @@ extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableVie
                 label.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 5),
                 label.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -5)
             ])
-
-
         return headerView
     }
-
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 40
     }
-
-    
 }
