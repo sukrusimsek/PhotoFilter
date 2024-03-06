@@ -13,7 +13,6 @@ protocol HomeScreenInterface: AnyObject {
     func configureVC()
     func configureImagePickerButton()
     func configureStackView()
-//    func configureInputView()
     func configureCollectionView()
     func configureOutputView()
     func useCamera()
@@ -23,6 +22,7 @@ protocol HomeScreenInterface: AnyObject {
     func configureShareButton()
     func configureSaveButton()
     func configureShowOriginalButton()
+    func configureSettingScreenButton()
     
 }
 final class HomeScreen: UIViewController {
@@ -38,6 +38,7 @@ final class HomeScreen: UIViewController {
     private let saveButton = UIButton()
     private let showOriginalButton = UIButton()
     private var selectedIndex: Int?
+    private let settingScreenButton = UIButton()
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.view = self
@@ -55,6 +56,17 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     
     func configureVC() {
         imagePicker.delegate = self
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = UIColor(red: 0.051, green: 0.051, blue: 0.051, alpha: 1)
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white,
+                                          .font: UIFont.systemFont(ofSize: 20, weight: .semibold)]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationItem.title = "PhotoFilter"
+        view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
         
     }
     func configureStackView() {
@@ -71,7 +83,6 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-            
         ])
     }
     func configureCollectionView() {
@@ -202,6 +213,40 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         showOriginalButton.addTarget(self, action: #selector(showOriginalButtonTappedOutside), for: .touchUpOutside)
 
     }
+    func configureSettingScreenButton() {
+        settingScreenButton.translatesAutoresizingMaskIntoConstraints = false
+        settingScreenButton.setTitle("Settings", for: .normal)
+        settingScreenButton.setTitleColor(.black, for: .normal)
+        settingScreenButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .regular)
+        settingScreenButton.setTitleShadowColor(.black, for: .normal)
+        settingScreenButton.translatesAutoresizingMaskIntoConstraints = false
+        settingScreenButton.layer.cornerRadius = 12
+        settingScreenButton.layer.masksToBounds = true
+        settingScreenButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        settingScreenButton.isUserInteractionEnabled = true
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.isUserInteractionEnabled = false
+        blurView.frame = settingScreenButton.bounds
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        settingScreenButton.insertSubview(blurView, at: 0)
+        blurView.leadingAnchor.constraint(equalTo: settingScreenButton.leadingAnchor).isActive = true
+        blurView.trailingAnchor.constraint(equalTo: settingScreenButton.trailingAnchor).isActive = true
+        blurView.topAnchor.constraint(equalTo: settingScreenButton.topAnchor).isActive = true
+        blurView.bottomAnchor.constraint(equalTo: settingScreenButton.bottomAnchor).isActive = true
+        imageViewOutput.addSubview(settingScreenButton)
+        NSLayoutConstraint.activate([
+            settingScreenButton.trailingAnchor.constraint(equalTo: imageViewOutput.trailingAnchor, constant: -10),
+            settingScreenButton.topAnchor.constraint(equalTo: imageViewOutput.topAnchor, constant: 10)
+        ])
+        settingScreenButton.addTarget(self, action: #selector(goToSettingScreenTapped), for: .touchUpInside)
+        
+    }
+    @objc func goToSettingScreenTapped() {
+        print("goToSettingScreenTapped")
+        navigationController?.pushViewController(SettingScreen(), animated: true)
+        
+    }
     @objc func showOriginalButtonTapped() {
         print("showOriginalButtonTapped")
         if imageViewOutput.image != UIImage(named: "default") {
@@ -238,7 +283,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         } else {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
-            let filename = "imageBySukruSimsek_\(dateFormatter.string(from: .now)).jpg"
+            let filename = "imageCreatedByPhotoFilter_\(dateFormatter.string(from: .now)).jpg"
             print("Image saved to gallery with filename: \(filename)")
         }
     }
@@ -365,8 +410,12 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
                     self.imageCollection.append(outputPhotoEffectTransfer ?? .default)
                     let outputPhotoEffectInstant = imageService.applyPhotoEffectInstant(to: resultImage)
                     self.imageCollection.append(outputPhotoEffectInstant ?? .default)
+                    let outputDither3 = imageService.applyDither(to: resultImage, intensity: 0.6)
+                    self.imageCollection.append(outputDither3 ?? .default)
                     let outputDither = imageService.applyDither(to: resultImage)
                     self.imageCollection.append(outputDither ?? .default)
+                    let outputDither2 = imageService.applyDither(to: resultImage, intensity: 0.2)
+                    self.imageCollection.append(outputDither2 ?? .default)
                     let outputSRGBToneCurveToLinear = imageService.applySRGBToneCurveToLinear(to: resultImage)
                     self.imageCollection.append(outputSRGBToneCurveToLinear ?? .default)
                     let outputMedian = imageService.applyMedian(to: resultImage)

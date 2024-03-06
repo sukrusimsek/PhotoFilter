@@ -17,6 +17,7 @@ final class SettingViewModel {
 
 extension SettingViewModel: SettingViewModelInterface {
     func viewDidLoad() {
-        
+        view?.configureVC()
+        view?.configureTableView()
     }
 }
