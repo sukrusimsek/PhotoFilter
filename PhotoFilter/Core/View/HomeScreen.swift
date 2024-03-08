@@ -8,6 +8,7 @@
 import UIKit
 import CoreImage
 import AVFoundation
+import BackgroundRemoval
 
 protocol HomeScreenInterface: AnyObject {
     func configureVC()
@@ -23,6 +24,8 @@ protocol HomeScreenInterface: AnyObject {
     func configureSaveButton()
     func configureShowOriginalButton()
     func configureSettingScreenButton()
+    func configureBackgroundRemoverButton()
+    func drawImage(_ image: UIImage) -> UIImage?
     
 }
 final class HomeScreen: UIViewController {
@@ -39,6 +42,7 @@ final class HomeScreen: UIViewController {
     private let showOriginalButton = UIButton()
     private var selectedIndex: Int?
     private let settingScreenButton = UIButton()
+    private let backgroundRemoverButton = UIButton()
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.view = self
@@ -213,6 +217,34 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         showOriginalButton.addTarget(self, action: #selector(showOriginalButtonTappedOutside), for: .touchUpOutside)
 
     }
+    func configureBackgroundRemoverButton() {
+        backgroundRemoverButton.translatesAutoresizingMaskIntoConstraints = false
+        backgroundRemoverButton.setTitle("Remover", for: .normal)
+        backgroundRemoverButton.setTitleColor(.black, for: .normal)
+        backgroundRemoverButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .regular)
+        backgroundRemoverButton.setTitleShadowColor(.black, for: .normal)
+        backgroundRemoverButton.translatesAutoresizingMaskIntoConstraints = false
+        backgroundRemoverButton.layer.cornerRadius = 12
+        backgroundRemoverButton.layer.masksToBounds = true
+        backgroundRemoverButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        backgroundRemoverButton.isUserInteractionEnabled = true
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.isUserInteractionEnabled = false
+        blurView.frame = backgroundRemoverButton.bounds
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundRemoverButton.insertSubview(blurView, at: 0)
+        blurView.leadingAnchor.constraint(equalTo: backgroundRemoverButton.leadingAnchor).isActive = true
+        blurView.trailingAnchor.constraint(equalTo: backgroundRemoverButton.trailingAnchor).isActive = true
+        blurView.topAnchor.constraint(equalTo: backgroundRemoverButton.topAnchor).isActive = true
+        blurView.bottomAnchor.constraint(equalTo: backgroundRemoverButton.bottomAnchor).isActive = true
+        imageViewOutput.addSubview(backgroundRemoverButton)
+        NSLayoutConstraint.activate([
+            backgroundRemoverButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            backgroundRemoverButton.topAnchor.constraint(equalTo: imageViewOutput.topAnchor, constant: 10)
+        ])
+        backgroundRemoverButton.addTarget(self, action: #selector(backgroundRemoverButtonTapped), for: .touchUpInside)
+    }
     func configureSettingScreenButton() {
         settingScreenButton.translatesAutoresizingMaskIntoConstraints = false
         settingScreenButton.setTitle("Settings", for: .normal)
@@ -241,6 +273,34 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         ])
         settingScreenButton.addTarget(self, action: #selector(goToSettingScreenTapped), for: .touchUpInside)
         
+    }
+    @objc func backgroundRemoverButtonTapped() {
+        if imageViewOutput.image != UIImage(named: "default") {
+            let backgroundRemover = BackgroundRemoval()
+            do {
+                let resultImage = try BackgroundRemoval().removeBackground(image: imageViewOutput.image!)
+
+                let newImage2 = drawImage(resultImage)
+                let newImage = UIImage(data: newImage2!.pngData()!)
+                imageViewOutput.image = newImage
+            } catch {
+                print(error)
+            }
+        } else {
+            alertNoAction(message: "Not Found The Photo")
+        }
+        
+    }
+    func drawImage(_ image: UIImage) -> UIImage? {
+        guard let coreImage = image.cgImage else {
+            return nil;
+        }
+        UIGraphicsBeginImageContext(CGSize(width: coreImage.width, height: coreImage.height))
+        image.draw(in: CGRect(x: Int(0.0), y: Int(0.0), width: coreImage.width, height: coreImage.height))
+        let resultImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return resultImage;
     }
     @objc func goToSettingScreenTapped() {
         print("goToSettingScreenTapped")
@@ -389,14 +449,12 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
             selectedIndex = index
         }
     }
-    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let result = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             let thumbImage = result.imageCompress()
             let resultImage = thumbImage
             imageViewInput.image = resultImage
             imageCollection.removeAll()
-            
             let imageService = ImageFilterService()
                 DispatchQueue.main.async {
                     
@@ -492,45 +550,3 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         }
     }
 }
-
-    func compressImage(_ img:UIImage) -> UIImage? {
-        // Reducing file size to a 10th
-        var actualHeight: CGFloat = img.size.height
-        var actualWidth: CGFloat = img.size.width
-        let maxHeight: CGFloat = 1136.0
-        let maxWidth: CGFloat = 640.0
-        var imgRatio: CGFloat = actualWidth/actualHeight
-        let maxRatio: CGFloat = maxWidth/maxHeight
-        var compressionQuality: CGFloat = 0.5
-        
-        if actualHeight > maxHeight || actualWidth > maxWidth {
-            if imgRatio < maxRatio {
-                //adjust width according to maxHeight
-                imgRatio = maxHeight / actualHeight
-                actualWidth = imgRatio * actualWidth
-                actualHeight = maxHeight
-            } else if imgRatio > maxRatio {
-                //adjust height according to maxWidth
-                imgRatio = maxWidth / actualWidth
-                actualHeight = imgRatio * actualHeight
-                actualWidth = maxWidth
-            } else {
-                actualHeight = maxHeight
-                actualWidth = maxWidth
-                compressionQuality = 1
-            }
-        }
-        let rect = CGRect(x: 0.0, y: 0.0, width: actualWidth, height: actualHeight)
-        UIGraphicsBeginImageContext(rect.size)
-        img.draw(in: rect)
-        guard let img = UIGraphicsGetImageFromCurrentImageContext() else {
-            return nil
-        }
-        UIGraphicsEndImageContext()
-        guard let imageData = img.jpegData(compressionQuality: compressionQuality) else {
-            return nil
-        }
-        return UIImage(data: imageData)
-    }
-   //compressImage(UIImage(named: "tst.jpg")!)
-    
