@@ -43,6 +43,8 @@ final class HomeScreen: UIViewController {
     private var selectedIndex: Int?
     private let settingScreenButton = UIButton()
     private let backgroundRemoverButton = UIButton()
+    private let filterNames = ["Energic","Soft","Sun","R-Light","Instant-Light","High-Dither","Dither","Slow-Dither","L-Shadow","Median","Beatiful","Pixel","Hexagon","Matte","White-Fade","Cartoon","Dark-Noir","Dark-Night","Dark-Mono","Dark-Back","L-Dark","Gamma-Dark","FacePurple","Vintage","Trapezoidal","Perpendicular","Poster-White","Animation","Thermal","X-Ray","Points"
+    ]
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.view = self
@@ -100,7 +102,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         collectionView.dataSource = self
         collectionView.backgroundColor = .lightGray
         collectionView.layer.cornerRadius = 8
-        collectionView.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        collectionView.heightAnchor.constraint(equalToConstant: 140).isActive = true
         collectionView.layer.masksToBounds = true
         collectionView.register(CustomCell.self, forCellWithReuseIdentifier: "Cell")
         stackView.addArrangedSubview(collectionView)
@@ -425,19 +427,20 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CustomCell
         let filteredImage = imageCollection[indexPath.item]
-        cell.setupCell(filteredImage)
+        let filterName = filterNames[indexPath.item]
+        cell.setupCell(filteredImage, text: filterName)
         cell.imageForFilter.image = filteredImage
-
+        cell.labelForFilterName.text = filterNames[indexPath.item]
+        
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize.init(width: 110, height: 110)
+        return CGSize.init(width: 120, height: 120)
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         imageViewOutput.image = imageCollection[indexPath.item]
-        
         selectImage(at: indexPath.item)
-        
+        print(filterNames[indexPath.item])
         print("index: \(indexPath.item + 1)")
         
         
@@ -458,82 +461,80 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
             let imageService = ImageFilterService()
                 DispatchQueue.main.async {
                     
-                    let outputImageVibrance = imageService.applyVibrance(to: resultImage, amount: 2.0)
+                    let outputImageVibrance = imageService.applyVibrance(to: resultImage, amount: 2.0)//Energic
                     self.imageCollection.append(outputImageVibrance ?? .default)
-                    let outputToneCurve = imageService.applyToneCurve(to: resultImage)
+                    let outputToneCurve = imageService.applyToneCurve(to: resultImage)//Soft
                     self.imageCollection.append(outputToneCurve ?? .default)
-                    let outputTemperatureAndTint = imageService.applyTemperatureAndTint(to: resultImage)
+                    let outputTemperatureAndTint = imageService.applyTemperatureAndTint(to: resultImage)//Sun
                     self.imageCollection.append(outputTemperatureAndTint ?? .default)
-                    let outputPhotoEffectTransfer = imageService.applyPhotoEffectTransfer(to: resultImage)
+                    let outputPhotoEffectTransfer = imageService.applyPhotoEffectTransfer(to: resultImage)//R-Light
                     self.imageCollection.append(outputPhotoEffectTransfer ?? .default)
-                    let outputPhotoEffectInstant = imageService.applyPhotoEffectInstant(to: resultImage)
+                    let outputPhotoEffectInstant = imageService.applyPhotoEffectInstant(to: resultImage)//Instant-Light
                     self.imageCollection.append(outputPhotoEffectInstant ?? .default)
-                    let outputDither3 = imageService.applyDither(to: resultImage, intensity: 0.6)
+                    let outputDither3 = imageService.applyDither(to: resultImage, intensity: 0.6)//High-Dither
                     self.imageCollection.append(outputDither3 ?? .default)
-                    let outputDither = imageService.applyDither(to: resultImage)
+                    let outputDither = imageService.applyDither(to: resultImage)//Dither
                     self.imageCollection.append(outputDither ?? .default)
-                    let outputDither2 = imageService.applyDither(to: resultImage, intensity: 0.2)
+                    let outputDither2 = imageService.applyDither(to: resultImage, intensity: 0.2)//Slow-Dither
                     self.imageCollection.append(outputDither2 ?? .default)
-                    let outputSRGBToneCurveToLinear = imageService.applySRGBToneCurveToLinear(to: resultImage)
+                    let outputSRGBToneCurveToLinear = imageService.applySRGBToneCurveToLinear(to: resultImage)//L-Shadow
                     self.imageCollection.append(outputSRGBToneCurveToLinear ?? .default)
-                    let outputMedian = imageService.applyMedian(to: resultImage)
+                    let outputMedian = imageService.applyMedian(to: resultImage)//Median
                     self.imageCollection.append(outputMedian ?? .default)
-                    let outputImageVibrance2 = imageService.applyVibrance(to: resultImage, amount: 5.0)
+                    let outputImageVibrance2 = imageService.applyVibrance(to: resultImage, amount: 5.0)//Beatiful
                     self.imageCollection.append(outputImageVibrance2 ?? .default)
-                    let outputImagePixellate = imageService.applyPixellate(to: resultImage, center: CGPoint(x: 150, y: 150), scale: 10)
+                    let outputImagePixellate = imageService.applyPixellate(to: resultImage, center: CGPoint(x: 150, y: 150), scale: 10)//Pixel
                     self.imageCollection.append(outputImagePixellate ?? .default)
-                    let outputImageHexagonalPixellate = imageService.applyHexagonalPixellate(to: resultImage, scale: 10)
+                    let outputImageHexagonalPixellate = imageService.applyHexagonalPixellate(to: resultImage, scale: 10)//Hexagon
                     self.imageCollection.append(outputImageHexagonalPixellate ?? .default)
-                    let outputNoiseReduction = imageService.applyNoiseReduction(to: resultImage)
+                    let outputNoiseReduction = imageService.applyNoiseReduction(to: resultImage)//Matte
                     self.imageCollection.append(outputNoiseReduction ?? .default)
-                    let outputPhotoEffectFade = imageService.applyPhotoEffectFade(to: resultImage)
+                    let outputPhotoEffectFade = imageService.applyPhotoEffectFade(to: resultImage)//White-Fade
                     self.imageCollection.append(outputPhotoEffectFade ?? .default)
-                    let outputPosterize = imageService.applyPosterize(to: resultImage)
+                    let outputPosterize = imageService.applyPosterize(to: resultImage)//Cartoon
                     self.imageCollection.append(outputPosterize ?? .default)
-
-                    let outputPhotoEffectNoir = imageService.applyPhotoEffectNoir(to: resultImage)
+                    
+                    let outputPhotoEffectNoir = imageService.applyPhotoEffectNoir(to: resultImage)//Dark-Noir
                     self.imageCollection.append(outputPhotoEffectNoir ?? .default)
-                    let outputMinimumComponent = imageService.applyMinimumComponent(to: resultImage)
+                    let outputMinimumComponent = imageService.applyMinimumComponent(to: resultImage)//Dark-Night
                     self.imageCollection.append(outputMinimumComponent ?? .default)
-                    let outputPhotoEffectMono = imageService.applyPhotoEffectMono(to: resultImage)
+                    let outputPhotoEffectMono = imageService.applyPhotoEffectMono(to: resultImage)//Dark-Mono
                     self.imageCollection.append(outputPhotoEffectMono ?? .default)
-                    let outputImageColorControl = imageService.applyColorControl(to: resultImage, brightness: -0.4, contrast: 1.0, saturation: 0.5)
+                    let outputImageColorControl = imageService.applyColorControl(to: resultImage, brightness: -0.4, contrast: 1.0, saturation: 0.5)//Dark-Back
                     self.imageCollection.append(outputImageColorControl ?? .default)
 
-                    
-                    
-                    let outputColorControl = imageService.applyColorControl(to: resultImage)//18
+                    let outputColorControl = imageService.applyColorControl(to: resultImage)//L-Dark
                     self.imageCollection.append(outputColorControl ?? .default)
-                    let outputGammaAdjust = imageService.applyGammaAdjust(to: resultImage)
+                    let outputGammaAdjust = imageService.applyGammaAdjust(to: resultImage)//Gamma-Dark
                     self.imageCollection.append(outputGammaAdjust ?? .default)
                     
-                    let outputHueAdjust = imageService.applyHueAdjuc(to: resultImage)
+                    let outputHueAdjust = imageService.applyHueAdjuc(to: resultImage)//FacePurple
                     self.imageCollection.append(outputHueAdjust ?? .default)
                     
-                    let outputFalseColor = imageService.applyFalseColor(to: resultImage)
+                    let outputFalseColor = imageService.applyFalseColor(to: resultImage)//Vintage
                     self.imageCollection.append(outputFalseColor ?? .default)
-                    let outputCircularScreen = imageService.applyCircularScreen(to: resultImage,sharpness: 0.35, width: 20)
+                    let outputCircularScreen = imageService.applyCircularScreen(to: resultImage,sharpness: 0.35, width: 20)//Trapezoidal
                     self.imageCollection.append(outputCircularScreen ?? .default)
 
-                    let outputHatchedScreen = imageService.applyHatchedScreen(to: resultImage)
+                    let outputHatchedScreen = imageService.applyHatchedScreen(to: resultImage)//Perpendicular
                     self.imageCollection.append(outputHatchedScreen ?? .default)
 
-                    let outputEdgeWork = imageService.applyEdgeWork(to: resultImage,radius: 1)
+                    let outputEdgeWork = imageService.applyEdgeWork(to: resultImage,radius: 1)//Poster-White
                     self.imageCollection.append(outputEdgeWork ?? .default)
                     
-                    let outputComicEffect = imageService.applyComicEffect(to: resultImage)
+                    let outputComicEffect = imageService.applyComicEffect(to: resultImage)//Animation
                     self.imageCollection.append(outputComicEffect ?? .default)
                     
-                    let outputThermal = imageService.applyThermal(to: resultImage)
+                    let outputThermal = imageService.applyThermal(to: resultImage)//Thermal
                     self.imageCollection.append(outputThermal ?? .default)
                     
-                    let outputXray = imageService.applyXray(to: resultImage)
+                    let outputXray = imageService.applyXray(to: resultImage)//X-Ray
                     self.imageCollection.append(outputXray ?? .default)
                     
-                    let outputPointillize = imageService.applyPointillize(to: resultImage)
+                    let outputPointillize = imageService.applyPointillize(to: resultImage)//Points
                     self.imageCollection.append(outputPointillize ?? .default)
 
-                    self.imageViewOutput.image = outputToneCurve
+                    self.imageViewOutput.image = outputImageVibrance
                     DispatchQueue.main.async {
                         self.collectionView.reloadData()
                     }
