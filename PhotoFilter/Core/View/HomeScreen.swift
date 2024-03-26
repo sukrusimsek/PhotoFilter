@@ -84,14 +84,13 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
    
     @objc func tappedBackPage() {
         print("tappedBackPage")
+        navigationController?.popViewController(animated: true)
     }
     func configureStackView() {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.spacing = 10
         stackView.backgroundColor = .gray
-        stackView.layer.cornerRadius = 16
-        stackView.layer.masksToBounds = true
         stackView.distribution = .fillProportionally
         view.addSubview(stackView)
         NSLayoutConstraint.activate([
@@ -120,9 +119,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     
     func configureOutputView() {
         imageViewOutput.translatesAutoresizingMaskIntoConstraints = false
-        imageViewOutput.image = UIImage(named: "default")
-        imageViewOutput.layer.cornerRadius = 12
-        imageViewOutput.layer.masksToBounds = true
+        imageViewOutput.image = UIImage(named: "defaultImage")
         imageViewOutput.contentMode = .scaleAspectFill
         imageViewOutput.backgroundColor = .lightText
         stackView.addArrangedSubview(imageViewOutput)
@@ -136,8 +133,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         imagePickerButton.backgroundColor = .lightGray
         imagePickerButton.setTitle("Select Photo", for: .normal)
         imagePickerButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-        imagePickerButton.layer.cornerRadius = 12
-        imagePickerButton.layer.masksToBounds = true
+        
         stackView.addArrangedSubview(imagePickerButton)
     }
     func configureShareButton() {
