@@ -21,6 +21,7 @@
 		8D848B592B8BBDDB0063C8D9 /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D848B582B8BBDDB0063C8D9 /* UIColor+Ext.swift */; };
 		8D848B612B8EAAE80063C8D9 /* FilterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D848B602B8EAAE80063C8D9 /* FilterService.swift */; };
 		8D848B642B914B2C0063C8D9 /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D848B632B914B2C0063C8D9 /* CustomCell.swift */; };
+		8DC9FB0B2BB3047400BC1A82 /* UIBarButtonItemSize+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC9FB0A2BB3047400BC1A82 /* UIBarButtonItemSize+Ext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		8D848B582B8BBDDB0063C8D9 /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 		8D848B602B8EAAE80063C8D9 /* FilterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterService.swift; sourceTree = "<group>"; };
 		8D848B632B914B2C0063C8D9 /* CustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
+		8DC9FB0A2BB3047400BC1A82 /* UIBarButtonItemSize+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItemSize+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 				8D848B582B8BBDDB0063C8D9 /* UIColor+Ext.swift */,
 				8D3308342B94F3FB0056D19B /* Alert+Ext.swift */,
 				8D6061952B97B0E900DCEE5F /* ImageCompress.swift */,
+				8DC9FB0A2BB3047400BC1A82 /* UIBarButtonItemSize+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -215,6 +218,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D848B422B8BB3700063C8D9 /* HomeScreen.swift in Sources */,
+				8DC9FB0B2BB3047400BC1A82 /* UIBarButtonItemSize+Ext.swift in Sources */,
 				8D848B3E2B8BB3700063C8D9 /* AppDelegate.swift in Sources */,
 				8D848B592B8BBDDB0063C8D9 /* UIColor+Ext.swift in Sources */,
 				8D848B612B8EAAE80063C8D9 /* FilterService.swift in Sources */,
