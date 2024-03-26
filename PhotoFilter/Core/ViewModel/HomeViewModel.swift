@@ -19,15 +19,14 @@ final class HomeViewModel {
 extension HomeViewModel: HomeViewModelInterface {
     func viewDidLoad() {
         view?.configureVC()
-        view?.configureStackView()
         view?.configureOutputView()
         view?.configureImagePickerButton()
         view?.configureCollectionView()
-        view?.configureShareButton()
+//        view?.configureShareButton()
         view?.configureSaveButton()
         view?.configureShowOriginalButton()
-        view?.configureSettingScreenButton()
-        view?.configureBackgroundRemoverButton()
+//        view?.configureBackgroundRemoverButton()
+        view?.viewForCollectionViewAndSelectShow()
     }
     func applyFiltersOnCollectionView() {
         //We will change our filter funcs. They will be here. Because we're using MVVM Design Pattern.

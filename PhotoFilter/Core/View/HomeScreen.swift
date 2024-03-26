@@ -13,25 +13,23 @@ import BackgroundRemoval
 protocol HomeScreenInterface: AnyObject {
     func configureVC()
     func configureImagePickerButton()
-    func configureStackView()
     func configureCollectionView()
     func configureOutputView()
     func useCamera()
     func openGallery()
     func openCamera()
     func reloadData()
-    func configureShareButton()
+//    func configureShareButton()
     func configureSaveButton()
     func configureShowOriginalButton()
-    func configureSettingScreenButton()
-    func configureBackgroundRemoverButton()
+//    func configureBackgroundRemoverButton()
     func drawImage(_ image: UIImage) -> UIImage?
+    func viewForCollectionViewAndSelectShow()
     
 }
 final class HomeScreen: UIViewController {
     private let imagePicker = UIImagePickerController()
     private let viewModel = HomeViewModel()
-    private let stackView = UIStackView()
     private lazy var imageViewInput = UIImageView()
     private var collectionView: UICollectionView!
     private lazy var imageViewOutput = UIImageView()
@@ -39,10 +37,11 @@ final class HomeScreen: UIViewController {
     private let imagePickerButton = UIButton()
     private let shareButton = UIButton()
     private let saveButton = UIButton()
-    private let showOriginalButton = UIButton()
+    private let showOriginalButton = UIButton(type: .custom)
     private var selectedIndex: Int?
     private let settingScreenButton = UIButton()
     private let backgroundRemoverButton = UIButton()
+    private let viewForBackgroundPickerSaveShowButton = UIView()
     private let filterNames = ["Energic","Soft","Sun","R-Light","Instant-Light","High-Dither","Dither","Slow-Dither","L-Shadow","Median","Beatiful","Pixel","Hexagon","Matte","White-Fade","Cartoon","Dark-Noir","Dark-Night","Dark -Mono","Dark-Back","L-Dark","Gamma-Dark","FacePurple","Vintage","Trapezoidal","Perpendicular","Poster-White","Animation","Thermal","X-Ray","Points"
     ]
     override func viewDidLoad() {
@@ -54,6 +53,8 @@ final class HomeScreen: UIViewController {
 }
 
 extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    
     func reloadData() {
         DispatchQueue.main.async {
             self.collectionView.reloadData()
@@ -72,34 +73,80 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.compactAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
-        view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
         
+        view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
 
         navigationItem.rightBarButtonItem = UIBarButtonItem.menuButton(self, action: #selector(goToSettingScreenTapped), imageName: "settingsButton")
         
         navigationItem.leftBarButtonItem = UIBarButtonItem.menuButton(self, action: #selector(tappedBackPage), imageName: "backButton", height: 32, width: 32)
         
     }
-
-   
     @objc func tappedBackPage() {
         print("tappedBackPage")
         navigationController?.popViewController(animated: true)
     }
-    func configureStackView() {
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.spacing = 10
-        stackView.backgroundColor = .gray
-        stackView.distribution = .fillProportionally
-        view.addSubview(stackView)
+
+    func configureOutputView() {
+        imageViewOutput.translatesAutoresizingMaskIntoConstraints = false
+        imageViewOutput.image = UIImage(named: "defaultImage")
+        imageViewOutput.contentMode = .scaleAspectFit
+        imageViewOutput.backgroundColor = .lightText
+        view.addSubview(imageViewOutput)
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            imageViewOutput.widthAnchor.constraint(equalToConstant: view.frame.size.width),
+            imageViewOutput.heightAnchor.constraint(equalToConstant: view.frame.size.height/1.9),
+            imageViewOutput.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            
         ])
     }
+    
+    func viewForCollectionViewAndSelectShow() {
+        viewForBackgroundPickerSaveShowButton.translatesAutoresizingMaskIntoConstraints = false
+        viewForBackgroundPickerSaveShowButton.backgroundColor = UIColor(rgb: 0x101010)
+        
+        view.addSubview(viewForBackgroundPickerSaveShowButton)
+        NSLayoutConstraint.activate([
+            viewForBackgroundPickerSaveShowButton.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            viewForBackgroundPickerSaveShowButton.widthAnchor.constraint(equalToConstant: view.frame.size.width),
+            viewForBackgroundPickerSaveShowButton.topAnchor.constraint(equalTo: imageViewOutput.bottomAnchor),
+            
+        ])
+    }
+    func configureImagePickerButton() {
+        imagePickerButton.translatesAutoresizingMaskIntoConstraints = false
+//        imagePickerButton.backgroundColor = .lightGray
+        imagePickerButton.setTitle("+ Select Photo", for: .normal)
+        imagePickerButton.setTitleColor(.white, for: .normal)
+        imagePickerButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        
+        viewForBackgroundPickerSaveShowButton.addSubview(imagePickerButton)
+        
+        NSLayoutConstraint.activate([
+            imagePickerButton.topAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.topAnchor, constant: 25),
+            imagePickerButton.leadingAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.leadingAnchor, constant: 10),
+            
+        ])
+    }
+    func configureShowOriginalButton() {
+        showOriginalButton.translatesAutoresizingMaskIntoConstraints = false
+        let iconSize = CGSize(width: 30, height: 30)
+        if let iconImage = UIImage(named: "showOriginal")?.resized(to: CGSize(width: 32, height: 32)) {
+            showOriginalButton.setImage(iconImage, for: .normal)
+        }
+
+//        showOriginalButton.imageView?.contentMode = .scaleAspectFit
+        viewForBackgroundPickerSaveShowButton.addSubview(showOriginalButton)
+        
+        NSLayoutConstraint.activate([
+            showOriginalButton.topAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.topAnchor, constant: 25),
+            showOriginalButton.trailingAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.trailingAnchor, constant: -10),
+        ])
+        showOriginalButton.addTarget(self, action: #selector(showOriginalButtonTapped), for: .touchDown)
+        showOriginalButton.addTarget(self, action: #selector(showOriginalButtonTappedOutside), for: .touchUpInside)
+        showOriginalButton.addTarget(self, action: #selector(showOriginalButtonTappedOutside), for: .touchUpOutside)
+
+    }
+    
     func configureCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -109,196 +156,115 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.backgroundColor = .lightGray
         collectionView.layer.cornerRadius = 8
-        collectionView.heightAnchor.constraint(equalToConstant: 140).isActive = true
+        collectionView.backgroundColor = UIColor(rgb: 0x101010)
         collectionView.layer.masksToBounds = true
         collectionView.register(CustomCell.self, forCellWithReuseIdentifier: "Cell")
-        stackView.addArrangedSubview(collectionView)
-    }
-    
-    func configureOutputView() {
-        imageViewOutput.translatesAutoresizingMaskIntoConstraints = false
-        imageViewOutput.image = UIImage(named: "defaultImage")
-        imageViewOutput.contentMode = .scaleAspectFill
-        imageViewOutput.backgroundColor = .lightText
-        stackView.addArrangedSubview(imageViewOutput)
+        viewForBackgroundPickerSaveShowButton.addSubview(collectionView)
         NSLayoutConstraint.activate([
-            imageViewOutput.widthAnchor.constraint(equalToConstant: view.frame.size.width),
-            imageViewOutput.heightAnchor.constraint(equalToConstant: view.frame.size.height/1.75)
+            
+            collectionView.heightAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.heightAnchor, multiplier: 0.5),
+            collectionView.topAnchor.constraint(equalTo: imagePickerButton.bottomAnchor, constant: 10),
+            collectionView.leadingAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.trailingAnchor)
+            
         ])
-    }
-    func configureImagePickerButton() {
-        imagePickerButton.translatesAutoresizingMaskIntoConstraints = false
-        imagePickerButton.backgroundColor = .lightGray
-        imagePickerButton.setTitle("Select Photo", for: .normal)
-        imagePickerButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-        
-        stackView.addArrangedSubview(imagePickerButton)
-    }
-    func configureShareButton() {
-        shareButton.setTitle("Share", for: .normal)
-        shareButton.setTitleColor(.black, for: .normal)
-        shareButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .regular)
-        shareButton.setTitleShadowColor(.black, for: .normal)
-        shareButton.translatesAutoresizingMaskIntoConstraints = false
-        shareButton.layer.cornerRadius = 12
-        shareButton.layer.masksToBounds = true
-        shareButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        imageViewOutput.isUserInteractionEnabled = true
-        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.isUserInteractionEnabled = false
-        blurView.frame = shareButton.bounds
-        blurView.translatesAutoresizingMaskIntoConstraints = false
-        shareButton.insertSubview(blurView, at: 0)
-        blurView.leadingAnchor.constraint(equalTo: shareButton.leadingAnchor).isActive = true
-        blurView.trailingAnchor.constraint(equalTo: shareButton.trailingAnchor).isActive = true
-        blurView.topAnchor.constraint(equalTo: shareButton.topAnchor).isActive = true
-        blurView.bottomAnchor.constraint(equalTo: shareButton.bottomAnchor).isActive = true
-        
-        imageViewOutput.addSubview(shareButton)
-        NSLayoutConstraint.activate([
-            shareButton.leadingAnchor.constraint(equalTo: imageViewOutput.leadingAnchor, constant: 10),
-            shareButton.topAnchor.constraint(equalTo: imageViewOutput.topAnchor, constant: 10)
-        ])
-        shareButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
     }
     func configureSaveButton() {
         saveButton.translatesAutoresizingMaskIntoConstraints = false
         saveButton.setTitle("Save", for: .normal)
         saveButton.setTitleColor(.black, for: .normal)
-        saveButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .regular)
-        saveButton.setTitleShadowColor(.black, for: .normal)
-        saveButton.translatesAutoresizingMaskIntoConstraints = false
-        saveButton.layer.cornerRadius = 12
+        saveButton.backgroundColor = .white
+        saveButton.layer.cornerRadius = 16
         saveButton.layer.masksToBounds = true
-        saveButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        imageViewOutput.isUserInteractionEnabled = true
-        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.isUserInteractionEnabled = false
-        blurView.frame = saveButton.bounds
-        blurView.translatesAutoresizingMaskIntoConstraints = false
-        saveButton.insertSubview(blurView, at: 0)
-        blurView.leadingAnchor.constraint(equalTo: saveButton.leadingAnchor).isActive = true
-        blurView.trailingAnchor.constraint(equalTo: saveButton.trailingAnchor).isActive = true
-        blurView.topAnchor.constraint(equalTo: saveButton.topAnchor).isActive = true
-        blurView.bottomAnchor.constraint(equalTo: saveButton.bottomAnchor).isActive = true
-        imageViewOutput.addSubview(saveButton)
-        NSLayoutConstraint.activate([
-            saveButton.leadingAnchor.constraint(equalTo: imageViewOutput.leadingAnchor, constant: 10),
-            saveButton.bottomAnchor.constraint(equalTo: imageViewOutput.bottomAnchor, constant: -10)
-        ])
+        viewForBackgroundPickerSaveShowButton.addSubview(saveButton)
         saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+        NSLayoutConstraint.activate([
+            saveButton.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 10),
+            saveButton.widthAnchor.constraint(equalToConstant: view.frame.size.width - 20),
+            saveButton.centerXAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.centerXAnchor),
+            saveButton.heightAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.heightAnchor, multiplier: 0.2)
+            
+        ])
         
     }
-    func configureShowOriginalButton() {
-        showOriginalButton.translatesAutoresizingMaskIntoConstraints = false
-        showOriginalButton.setTitle("Original", for: .normal)
-        showOriginalButton.setTitleColor(.black, for: .normal)
-        showOriginalButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .regular)
-        showOriginalButton.setTitleShadowColor(.black, for: .normal)
-        showOriginalButton.translatesAutoresizingMaskIntoConstraints = false
-        showOriginalButton.layer.cornerRadius = 12
-        showOriginalButton.layer.masksToBounds = true
-        showOriginalButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        showOriginalButton.isUserInteractionEnabled = true
-        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.isUserInteractionEnabled = false
-        blurView.frame = showOriginalButton.bounds
-        blurView.translatesAutoresizingMaskIntoConstraints = false
-        showOriginalButton.insertSubview(blurView, at: 0)
-        blurView.leadingAnchor.constraint(equalTo: showOriginalButton.leadingAnchor).isActive = true
-        blurView.trailingAnchor.constraint(equalTo: showOriginalButton.trailingAnchor).isActive = true
-        blurView.topAnchor.constraint(equalTo: showOriginalButton.topAnchor).isActive = true
-        blurView.bottomAnchor.constraint(equalTo: showOriginalButton.bottomAnchor).isActive = true
-        imageViewOutput.addSubview(showOriginalButton)
-        NSLayoutConstraint.activate([
-            showOriginalButton.trailingAnchor.constraint(equalTo: imageViewOutput.trailingAnchor, constant: -10),
-            showOriginalButton.bottomAnchor.constraint(equalTo: imageViewOutput.bottomAnchor, constant: -10)
-        ])
-        showOriginalButton.addTarget(self, action: #selector(showOriginalButtonTapped), for: .touchDown)
-        
-        showOriginalButton.addTarget(self, action: #selector(showOriginalButtonTappedOutside), for: .touchUpInside)
-        showOriginalButton.addTarget(self, action: #selector(showOriginalButtonTappedOutside), for: .touchUpOutside)
-
-    }
-    func configureBackgroundRemoverButton() {
-        backgroundRemoverButton.translatesAutoresizingMaskIntoConstraints = false
-        backgroundRemoverButton.setTitle("Remover", for: .normal)
-        backgroundRemoverButton.setTitleColor(.black, for: .normal)
-        backgroundRemoverButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .regular)
-        backgroundRemoverButton.setTitleShadowColor(.black, for: .normal)
-        backgroundRemoverButton.translatesAutoresizingMaskIntoConstraints = false
-        backgroundRemoverButton.layer.cornerRadius = 12
-        backgroundRemoverButton.layer.masksToBounds = true
-        backgroundRemoverButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        backgroundRemoverButton.isUserInteractionEnabled = true
-        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.isUserInteractionEnabled = false
-        blurView.frame = backgroundRemoverButton.bounds
-        blurView.translatesAutoresizingMaskIntoConstraints = false
-        backgroundRemoverButton.insertSubview(blurView, at: 0)
-        blurView.leadingAnchor.constraint(equalTo: backgroundRemoverButton.leadingAnchor).isActive = true
-        blurView.trailingAnchor.constraint(equalTo: backgroundRemoverButton.trailingAnchor).isActive = true
-        blurView.topAnchor.constraint(equalTo: backgroundRemoverButton.topAnchor).isActive = true
-        blurView.bottomAnchor.constraint(equalTo: backgroundRemoverButton.bottomAnchor).isActive = true
-        imageViewOutput.addSubview(backgroundRemoverButton)
-        NSLayoutConstraint.activate([
-            backgroundRemoverButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            backgroundRemoverButton.topAnchor.constraint(equalTo: imageViewOutput.topAnchor, constant: 10)
-        ])
-        backgroundRemoverButton.addTarget(self, action: #selector(backgroundRemoverButtonTapped), for: .touchUpInside)
-    }
-    func configureSettingScreenButton() {
-//        settingScreenButton.translatesAutoresizingMaskIntoConstraints = false
-//        settingScreenButton.setTitle("Settings", for: .normal)
-//        settingScreenButton.setTitleColor(.black, for: .normal)
-//        settingScreenButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .regular)
-//        settingScreenButton.setTitleShadowColor(.black, for: .normal)
-//        settingScreenButton.translatesAutoresizingMaskIntoConstraints = false
-//        settingScreenButton.layer.cornerRadius = 12
-//        settingScreenButton.layer.masksToBounds = true
-//        settingScreenButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
-//        settingScreenButton.isUserInteractionEnabled = true
+//    func configureShareButton() {
+//        shareButton.setTitle("Share", for: .normal)
+//        shareButton.setTitleColor(.black, for: .normal)
+//        shareButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .regular)
+//        shareButton.setTitleShadowColor(.black, for: .normal)
+//        shareButton.translatesAutoresizingMaskIntoConstraints = false
+//        shareButton.layer.cornerRadius = 12
+//        shareButton.layer.masksToBounds = true
+//        shareButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
+//        imageViewOutput.isUserInteractionEnabled = true
 //        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
 //        let blurView = UIVisualEffectView(effect: blurEffect)
 //        blurView.isUserInteractionEnabled = false
-//        blurView.frame = settingScreenButton.bounds
+//        blurView.frame = shareButton.bounds
 //        blurView.translatesAutoresizingMaskIntoConstraints = false
-//        settingScreenButton.insertSubview(blurView, at: 0)
-//        blurView.leadingAnchor.constraint(equalTo: settingScreenButton.leadingAnchor).isActive = true
-//        blurView.trailingAnchor.constraint(equalTo: settingScreenButton.trailingAnchor).isActive = true
-//        blurView.topAnchor.constraint(equalTo: settingScreenButton.topAnchor).isActive = true
-//        blurView.bottomAnchor.constraint(equalTo: settingScreenButton.bottomAnchor).isActive = true
-//        imageViewOutput.addSubview(settingScreenButton)
+//        shareButton.insertSubview(blurView, at: 0)
+//        blurView.leadingAnchor.constraint(equalTo: shareButton.leadingAnchor).isActive = true
+//        blurView.trailingAnchor.constraint(equalTo: shareButton.trailingAnchor).isActive = true
+//        blurView.topAnchor.constraint(equalTo: shareButton.topAnchor).isActive = true
+//        blurView.bottomAnchor.constraint(equalTo: shareButton.bottomAnchor).isActive = true
+//        
+//        imageViewOutput.addSubview(shareButton)
 //        NSLayoutConstraint.activate([
-//            settingScreenButton.trailingAnchor.constraint(equalTo: imageViewOutput.trailingAnchor, constant: -10),
-//            settingScreenButton.topAnchor.constraint(equalTo: imageViewOutput.topAnchor, constant: 10)
+//            shareButton.leadingAnchor.constraint(equalTo: imageViewOutput.leadingAnchor, constant: 10),
+//            shareButton.topAnchor.constraint(equalTo: imageViewOutput.topAnchor, constant: 10)
 //        ])
-//        settingScreenButton.addTarget(self, action: #selector(goToSettingScreenTapped), for: .touchUpInside)
-        
-    }
-    @objc func backgroundRemoverButtonTapped() {
-        if imageViewOutput.image != UIImage(named: "default") {
-            let backgroundRemover = BackgroundRemoval()
-            do {
-                let resultImage = try BackgroundRemoval().removeBackground(image: imageViewOutput.image!)
+//        shareButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
+//    }
 
-                let newImage2 = drawImage(resultImage)
-                let newImage = UIImage(data: newImage2!.pngData()!)
-                imageViewOutput.image = newImage
-            } catch {
-                print(error)
-            }
-        } else {
-            alertNoAction(message: "Not Found The Photo")
-        }
-        
-    }
+    
+//    func configureBackgroundRemoverButton() {
+//        backgroundRemoverButton.translatesAutoresizingMaskIntoConstraints = false
+//        backgroundRemoverButton.setTitle("Remover", for: .normal)
+//        backgroundRemoverButton.setTitleColor(.black, for: .normal)
+//        backgroundRemoverButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .regular)
+//        backgroundRemoverButton.setTitleShadowColor(.black, for: .normal)
+//        backgroundRemoverButton.translatesAutoresizingMaskIntoConstraints = false
+//        backgroundRemoverButton.layer.cornerRadius = 12
+//        backgroundRemoverButton.layer.masksToBounds = true
+//        backgroundRemoverButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+//        backgroundRemoverButton.isUserInteractionEnabled = true
+//        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
+//        let blurView = UIVisualEffectView(effect: blurEffect)
+//        blurView.isUserInteractionEnabled = false
+//        blurView.frame = backgroundRemoverButton.bounds
+//        blurView.translatesAutoresizingMaskIntoConstraints = false
+//        backgroundRemoverButton.insertSubview(blurView, at: 0)
+//        blurView.leadingAnchor.constraint(equalTo: backgroundRemoverButton.leadingAnchor).isActive = true
+//        blurView.trailingAnchor.constraint(equalTo: backgroundRemoverButton.trailingAnchor).isActive = true
+//        blurView.topAnchor.constraint(equalTo: backgroundRemoverButton.topAnchor).isActive = true
+//        blurView.bottomAnchor.constraint(equalTo: backgroundRemoverButton.bottomAnchor).isActive = true
+//        imageViewOutput.addSubview(backgroundRemoverButton)
+//        NSLayoutConstraint.activate([
+//            backgroundRemoverButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//            backgroundRemoverButton.topAnchor.constraint(equalTo: imageViewOutput.topAnchor, constant: 10)
+//        ])
+//        backgroundRemoverButton.addTarget(self, action: #selector(backgroundRemoverButtonTapped), for: .touchUpInside)
+//    }
+   
+    
+//    @objc func backgroundRemoverButtonTapped() {
+//        if imageViewOutput.image != UIImage(named: "default") {
+//            let backgroundRemover = BackgroundRemoval()
+//            do {
+//                let resultImage = try BackgroundRemoval().removeBackground(image: imageViewOutput.image!)
+//
+//                let newImage2 = drawImage(resultImage)
+//                let newImage = UIImage(data: newImage2!.pngData()!)
+//                imageViewOutput.image = newImage
+//            } catch {
+//                print(error)
+//            }
+//        } else {
+//            alertNoAction(message: "Not Found The Photo")
+//        }
+//        
+//    }
     func drawImage(_ image: UIImage) -> UIImage? {
         guard let coreImage = image.cgImage else {
             return nil;
@@ -338,7 +304,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
                 alertNoAction(message: "Not found photo")
         return
         }
-        if imageViewOutput.image != UIImage(named: "default") {
+        if imageViewOutput.image != UIImage(named: "defaultImage") {
             UIImageWriteToSavedPhotosAlbum(imageToSave, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
             alertNoAction(message: "Save Successful")
         } else {
@@ -437,7 +403,6 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         cell.setupCell(filteredImage, text: filterName)
         cell.imageForFilter.image = filteredImage
         cell.labelForFilterName.text = filterNames[indexPath.item]
-        
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -558,3 +523,13 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     }
 }
 
+import UIKit
+
+extension UIImage {
+    func resized(to size: CGSize) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        draw(in: CGRect(origin: .zero, size: size))
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
+}

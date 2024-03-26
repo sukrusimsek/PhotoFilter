@@ -12,6 +12,7 @@ protocol SelectPhotoViewInterface: AnyObject {
     func configureDefaultSelectView()
     func configureSelectPhotoButton()
     
+    
 }
 
 final class SelectPhotoView: UIViewController {
@@ -19,6 +20,7 @@ final class SelectPhotoView: UIViewController {
     private let tabView = UIView()
     private let defaultViewButton = UIImageView()
     private let selectPhoto = UIButton()
+    let homeIndicator = UIView()
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.view = self
@@ -57,12 +59,24 @@ extension SelectPhotoView: SelectPhotoViewInterface {
     func configureTabView() {
         tabView.translatesAutoresizingMaskIntoConstraints = false
         tabView.backgroundColor = UIColor(rgb: 0x101010)
+        
+        homeIndicator.translatesAutoresizingMaskIntoConstraints = false
+        homeIndicator.backgroundColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.2)
+        homeIndicator.layer.cornerRadius = 1
+        homeIndicator.layer.masksToBounds = true
         view.addSubview(tabView)
+        tabView.addSubview(homeIndicator)
         
         NSLayoutConstraint.activate([
             tabView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.075),
             tabView.widthAnchor.constraint(equalToConstant: view.frame.width),
             tabView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            homeIndicator.topAnchor.constraint(equalTo: tabView.topAnchor, constant: 10),
+            homeIndicator.widthAnchor.constraint(equalToConstant: 40),
+            homeIndicator.centerXAnchor.constraint(equalTo: tabView.centerXAnchor),
+            homeIndicator.heightAnchor.constraint(equalToConstant: 3),
+            
         ])
     }
     func configureDefaultSelectView() {
@@ -95,7 +109,12 @@ extension SelectPhotoView: SelectPhotoViewInterface {
         ])
     }
     @objc func tappedSelectPhotoPage() {
-        print("tappedSelectPhotoPage")
+        
+        
+        
         navigationController?.pushViewController(HomeScreen(), animated: true)
+        print("tappedSelectPhotoPage")
+        
+        
     }
 }
