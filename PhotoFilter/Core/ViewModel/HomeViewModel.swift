@@ -21,7 +21,9 @@ extension HomeViewModel: HomeViewModelInterface {
         view?.configureVC()
         view?.configureOutputView()
         view?.configureImagePickerButton()
+        
         view?.configureCollectionView()
+        view?.createDivider()
 //        view?.configureShareButton()
         view?.configureSaveButton()
         view?.configureShowOriginalButton()

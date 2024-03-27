@@ -25,6 +25,7 @@ protocol HomeScreenInterface: AnyObject {
 //    func configureBackgroundRemoverButton()
     func drawImage(_ image: UIImage) -> UIImage?
     func viewForCollectionViewAndSelectShow()
+    func createDivider()
     
 }
 final class HomeScreen: UIViewController {
@@ -45,6 +46,7 @@ final class HomeScreen: UIViewController {
     private let filterNames =  ["Energic","Soft","Sun","R-Light","Instant-Light","High-Dither","Dither","Slow-Dither","L-Shadow","Median","Beatiful","Pixel","Hexagon","Matte","White-Fade","Cartoon","Dark-Noir","Dark-Night","Dark -Mono","Dark-Back","L-Dark","Gamma-Dark","FacePurple","Vintage","Trapezoidal","Perpendicular","Poster-White","Animation","Thermal","X-Ray","Points"
     ]
     let homeIndicator = UIView()
+    let divider = UIView()
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.view = self
@@ -77,9 +79,17 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         
         view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem.menuButton(self, action: #selector(goToSettingScreenTapped), imageName: "settingsButton")
+        let rightSettingButton = UIBarButtonItem.menuButton(self, action: #selector(goToSettingScreenTapped), imageName: "settingsButton")
+        let rightShareButton = UIBarButtonItem.menuButton(self, action: #selector(shareButtonTapped), imageName: "shareButton")
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+
+
+        navigationItem.rightBarButtonItems = [rightSettingButton,flexibleSpace, flexibleSpace ,rightShareButton]
         
         navigationItem.leftBarButtonItem = UIBarButtonItem.menuButton(self, action: #selector(tappedBackPage), imageName: "backButton", height: 32, width: 32)
+        
+        
+        
         
         homeIndicator.translatesAutoresizingMaskIntoConstraints = false
         homeIndicator.backgroundColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.2)
@@ -129,7 +139,6 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     }
     func configureImagePickerButton() {
         imagePickerButton.translatesAutoresizingMaskIntoConstraints = false
-//        imagePickerButton.backgroundColor = .lightGray
         imagePickerButton.setTitle("+ Select Photo", for: .normal)
         imagePickerButton.setTitleColor(.white, for: .normal)
         imagePickerButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
@@ -180,8 +189,8 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         viewForBackgroundPickerSaveShowButton.addSubview(collectionView)
         NSLayoutConstraint.activate([
             
-            collectionView.heightAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.heightAnchor, multiplier: 0.5),
-            collectionView.topAnchor.constraint(equalTo: imagePickerButton.bottomAnchor, constant: 10),
+            collectionView.heightAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.heightAnchor, multiplier: 0.4),
+            collectionView.topAnchor.constraint(equalTo: imagePickerButton.bottomAnchor, constant: 5),
             collectionView.leadingAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.trailingAnchor)
             
@@ -192,12 +201,12 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         saveButton.setTitle("Save", for: .normal)
         saveButton.setTitleColor(.black, for: .normal)
         saveButton.backgroundColor = .white
-        saveButton.layer.cornerRadius = 16
+        saveButton.layer.cornerRadius = 24
         saveButton.layer.masksToBounds = true
         viewForBackgroundPickerSaveShowButton.addSubview(saveButton)
         saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         NSLayoutConstraint.activate([
-            saveButton.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 10),
+            saveButton.topAnchor.constraint(equalTo: divider.bottomAnchor, constant: 15),
             saveButton.widthAnchor.constraint(equalToConstant: view.frame.size.width - 20),
             saveButton.centerXAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.centerXAnchor),
             saveButton.heightAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.heightAnchor, multiplier: 0.15)
@@ -205,6 +214,17 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         ])
         
     }
+    func createDivider() {
+        divider.translatesAutoresizingMaskIntoConstraints = false
+        divider.backgroundColor = UIColor(white: 1, alpha: 0.2)
+        viewForBackgroundPickerSaveShowButton.addSubview(divider)
+        NSLayoutConstraint.activate([
+            divider.widthAnchor.constraint(equalToConstant: view.frame.size.width),
+            divider.heightAnchor.constraint(equalToConstant: 1),
+            divider.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 10),
+        ])
+    }
+    
 //    func configureShareButton() {
 //        shareButton.setTitle("Share", for: .normal)
 //        shareButton.setTitleColor(.black, for: .normal)
@@ -300,12 +320,12 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     }
     @objc func showOriginalButtonTapped() {
         print("showOriginalButtonTapped")
-        if imageViewOutput.image != UIImage(named: "default") {
+        if imageViewOutput.image != UIImage(named: "defaultImage") {
             imageViewOutput.image = imageViewInput.image
         }
     }
     @objc func showOriginalButtonTappedOutside() {
-        if imageViewOutput.image != UIImage(named: "default") {
+        if imageViewOutput.image != UIImage(named: "defaultImage") {
             guard let index = selectedIndex, index < imageCollection.count else {
                 return
             }
@@ -340,7 +360,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     }
     @objc func shareButtonTapped() {
         print("shareButtonTapped")
-        if imageViewOutput.image != UIImage(named: "default") {
+        if imageViewOutput.image != UIImage(named: "defaultImage") {
             let imageShare = [imageViewOutput.image]
             let activityViewController = UIActivityViewController(activityItems: imageShare as [Any], applicationActivities: nil)
             activityViewController.popoverPresentationController?.sourceView = self.view
@@ -352,19 +372,19 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     @objc func buttonTapped() {
         print("button tapped")
         //Alert for Choosing
-        let alertControllerForImage = UIAlertController(title: "Fotoğraf Seç", message: nil, preferredStyle: .actionSheet)
-        let galleryAction = UIAlertAction(title: "Galeri", style: .default) { (_) in
+        let alertControllerForImage = UIAlertController(title: "Select Photo", message: nil, preferredStyle: .actionSheet)
+        let galleryAction = UIAlertAction(title: "Gallery", style: .default) { (_) in
             self.openGallery()
         }
         alertControllerForImage.addAction(galleryAction)
         
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            let cameraAction = UIAlertAction(title: "Kamera", style: .default) { (_) in
+            let cameraAction = UIAlertAction(title: "Camera", style: .default) { (_) in
                 self.openCamera()
             }
             alertControllerForImage.addAction(cameraAction)
         }
-        let cancelAction = UIAlertAction(title: "İptal", style: .cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertControllerForImage.addAction(cancelAction)
         present(alertControllerForImage, animated: true, completion: nil)
     }
