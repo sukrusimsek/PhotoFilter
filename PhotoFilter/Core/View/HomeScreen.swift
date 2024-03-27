@@ -42,8 +42,9 @@ final class HomeScreen: UIViewController {
     private let settingScreenButton = UIButton()
     private let backgroundRemoverButton = UIButton()
     private let viewForBackgroundPickerSaveShowButton = UIView()
-    private let filterNames = ["Energic","Soft","Sun","R-Light","Instant-Light","High-Dither","Dither","Slow-Dither","L-Shadow","Median","Beatiful","Pixel","Hexagon","Matte","White-Fade","Cartoon","Dark-Noir","Dark-Night","Dark -Mono","Dark-Back","L-Dark","Gamma-Dark","FacePurple","Vintage","Trapezoidal","Perpendicular","Poster-White","Animation","Thermal","X-Ray","Points"
+    private let filterNames =  ["Energic","Soft","Sun","R-Light","Instant-Light","High-Dither","Dither","Slow-Dither","L-Shadow","Median","Beatiful","Pixel","Hexagon","Matte","White-Fade","Cartoon","Dark-Noir","Dark-Night","Dark -Mono","Dark-Back","L-Dark","Gamma-Dark","FacePurple","Vintage","Trapezoidal","Perpendicular","Poster-White","Animation","Thermal","X-Ray","Points"
     ]
+    let homeIndicator = UIView()
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.view = self
@@ -80,10 +81,24 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         
         navigationItem.leftBarButtonItem = UIBarButtonItem.menuButton(self, action: #selector(tappedBackPage), imageName: "backButton", height: 32, width: 32)
         
+        homeIndicator.translatesAutoresizingMaskIntoConstraints = false
+        homeIndicator.backgroundColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.2)
+        homeIndicator.layer.cornerRadius = 1
+        homeIndicator.layer.masksToBounds = true
+        viewForBackgroundPickerSaveShowButton.addSubview(homeIndicator)
+        
+        NSLayoutConstraint.activate([
+            homeIndicator.topAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.topAnchor, constant: 10),
+            homeIndicator.widthAnchor.constraint(equalToConstant: 40),
+            homeIndicator.centerXAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.centerXAnchor),
+            homeIndicator.heightAnchor.constraint(equalToConstant: 3),
+        ])
+        
+        
     }
     @objc func tappedBackPage() {
         print("tappedBackPage")
-        navigationController?.popViewController(animated: true)
+        navigationController?.dismiss(animated: true)
     }
 
     func configureOutputView() {
@@ -119,6 +134,8 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         imagePickerButton.setTitleColor(.white, for: .normal)
         imagePickerButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(buttonTapped), name: NSNotification.Name("PickerViewOn"), object: nil)
+        
         viewForBackgroundPickerSaveShowButton.addSubview(imagePickerButton)
         
         NSLayoutConstraint.activate([
@@ -127,9 +144,9 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
             
         ])
     }
+    
     func configureShowOriginalButton() {
         showOriginalButton.translatesAutoresizingMaskIntoConstraints = false
-        let iconSize = CGSize(width: 30, height: 30)
         if let iconImage = UIImage(named: "showOriginal")?.resized(to: CGSize(width: 32, height: 32)) {
             showOriginalButton.setImage(iconImage, for: .normal)
         }
@@ -183,7 +200,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
             saveButton.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 10),
             saveButton.widthAnchor.constraint(equalToConstant: view.frame.size.width - 20),
             saveButton.centerXAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.centerXAnchor),
-            saveButton.heightAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.heightAnchor, multiplier: 0.2)
+            saveButton.heightAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.heightAnchor, multiplier: 0.15)
             
         ])
         

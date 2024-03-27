@@ -110,9 +110,21 @@ extension SelectPhotoView: SelectPhotoViewInterface {
     }
     @objc func tappedSelectPhotoPage() {
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            NotificationCenter.default.post(name: NSNotification.Name("PickerViewOn"), object: nil)
+        }
+        
+       
+        let loginViewController = HomeScreen()
+        let navigationController = UINavigationController(rootViewController: loginViewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        present(navigationController, animated: true, completion: nil)
+        print("Geçiş Başarılı...")
         
         
-        navigationController?.pushViewController(HomeScreen(), animated: true)
+        
+        
+//        navigationController?.pushViewController(HomeScreen(), animated: true)
         print("tappedSelectPhotoPage")
         
         
