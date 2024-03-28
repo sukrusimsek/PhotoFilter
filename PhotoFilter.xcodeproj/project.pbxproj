@@ -24,6 +24,9 @@
 		8DC9FB0B2BB3047400BC1A82 /* UIBarButtonItemSize+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC9FB0A2BB3047400BC1A82 /* UIBarButtonItemSize+Ext.swift */; };
 		8DC9FB0D2BB307D900BC1A82 /* SelectPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC9FB0C2BB307D900BC1A82 /* SelectPhotoView.swift */; };
 		8DC9FB0F2BB307F700BC1A82 /* SelectPhotoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC9FB0E2BB307F700BC1A82 /* SelectPhotoViewModel.swift */; };
+		8DC9FB112BB4F01F00BC1A82 /* FirstHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC9FB102BB4F01F00BC1A82 /* FirstHomeView.swift */; };
+		8DC9FB132BB4F03300BC1A82 /* FirstHomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC9FB122BB4F03300BC1A82 /* FirstHomeViewModel.swift */; };
+		8DC9FB152BB4F36400BC1A82 /* FirstHomeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC9FB142BB4F36400BC1A82 /* FirstHomeCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +48,9 @@
 		8DC9FB0A2BB3047400BC1A82 /* UIBarButtonItemSize+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItemSize+Ext.swift"; sourceTree = "<group>"; };
 		8DC9FB0C2BB307D900BC1A82 /* SelectPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPhotoView.swift; sourceTree = "<group>"; };
 		8DC9FB0E2BB307F700BC1A82 /* SelectPhotoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPhotoViewModel.swift; sourceTree = "<group>"; };
+		8DC9FB102BB4F01F00BC1A82 /* FirstHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstHomeView.swift; sourceTree = "<group>"; };
+		8DC9FB122BB4F03300BC1A82 /* FirstHomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstHomeViewModel.swift; sourceTree = "<group>"; };
+		8DC9FB142BB4F36400BC1A82 /* FirstHomeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstHomeCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +119,7 @@
 				8D848B412B8BB3700063C8D9 /* HomeScreen.swift */,
 				8D60619B2B98B50D00DCEE5F /* SettingScreen.swift */,
 				8DC9FB0C2BB307D900BC1A82 /* SelectPhotoView.swift */,
+				8DC9FB102BB4F01F00BC1A82 /* FirstHomeView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -123,6 +130,7 @@
 				8D848B562B8BBC270063C8D9 /* HomeViewModel.swift */,
 				8D6061992B98B4F000DCEE5F /* SettingViewModel.swift */,
 				8DC9FB0E2BB307F700BC1A82 /* SelectPhotoViewModel.swift */,
+				8DC9FB122BB4F03300BC1A82 /* FirstHomeViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -143,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				8D848B632B914B2C0063C8D9 /* CustomCell.swift */,
+				8DC9FB142BB4F36400BC1A82 /* FirstHomeCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -223,11 +232,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8DC9FB132BB4F03300BC1A82 /* FirstHomeViewModel.swift in Sources */,
 				8D848B422B8BB3700063C8D9 /* HomeScreen.swift in Sources */,
 				8DC9FB0F2BB307F700BC1A82 /* SelectPhotoViewModel.swift in Sources */,
 				8DC9FB0B2BB3047400BC1A82 /* UIBarButtonItemSize+Ext.swift in Sources */,
 				8D848B3E2B8BB3700063C8D9 /* AppDelegate.swift in Sources */,
 				8D848B592B8BBDDB0063C8D9 /* UIColor+Ext.swift in Sources */,
+				8DC9FB152BB4F36400BC1A82 /* FirstHomeCell.swift in Sources */,
+				8DC9FB112BB4F01F00BC1A82 /* FirstHomeView.swift in Sources */,
 				8D848B612B8EAAE80063C8D9 /* FilterService.swift in Sources */,
 				8D848B402B8BB3700063C8D9 /* SceneDelegate.swift in Sources */,
 				8DC9FB0D2BB307D900BC1A82 /* SelectPhotoView.swift in Sources */,
