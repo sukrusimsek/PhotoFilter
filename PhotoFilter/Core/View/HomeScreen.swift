@@ -113,7 +113,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
 
     func configureOutputView() {
         imageViewOutput.translatesAutoresizingMaskIntoConstraints = false
-        imageViewOutput.image = UIImage(named: "defaultImage")
+        imageViewOutput.image = UIImage(named: "defaultImage2")
         imageViewOutput.contentMode = .scaleAspectFit
         imageViewOutput.backgroundColor = .lightText
         view.addSubview(imageViewOutput)
@@ -320,12 +320,12 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     }
     @objc func showOriginalButtonTapped() {
         print("showOriginalButtonTapped")
-        if imageViewOutput.image != UIImage(named: "defaultImage") {
+        if imageViewOutput.image != UIImage(named: "defaultImage2") {
             imageViewOutput.image = imageViewInput.image
         }
     }
     @objc func showOriginalButtonTappedOutside() {
-        if imageViewOutput.image != UIImage(named: "defaultImage") {
+        if imageViewOutput.image != UIImage(named: "defaultImage2") {
             guard let index = selectedIndex, index < imageCollection.count else {
                 return
             }
@@ -341,7 +341,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
                 alertNoAction(message: "Not found photo")
         return
         }
-        if imageViewOutput.image != UIImage(named: "defaultImage") {
+        if imageViewOutput.image != UIImage(named: "defaultImage2") {
             UIImageWriteToSavedPhotosAlbum(imageToSave, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
             alertNoAction(message: "Save Successful")
         } else {
@@ -360,7 +360,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     }
     @objc func shareButtonTapped() {
         print("shareButtonTapped")
-        if imageViewOutput.image != UIImage(named: "defaultImage") {
+        if imageViewOutput.image != UIImage(named: "defaultImage2") {
             let imageShare = [imageViewOutput.image]
             let activityViewController = UIActivityViewController(activityItems: imageShare as [Any], applicationActivities: nil)
             activityViewController.popoverPresentationController?.sourceView = self.view

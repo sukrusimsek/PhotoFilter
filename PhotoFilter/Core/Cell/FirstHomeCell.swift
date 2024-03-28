@@ -39,7 +39,7 @@ class FirstHomeCell: UICollectionViewCell {
         label.font = .systemFont(ofSize: 24, weight: .medium)
         label.textColor = .white
         label.textAlignment = .center
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         return label
     }()
     
@@ -72,26 +72,52 @@ class FirstHomeCell: UICollectionViewCell {
     }()
     
     
-    
     override init(frame: CGRect) {
         super.init(frame: .zero)
         contentView.addSubview(imageForFilter)
         contentView.addSubview(blurView)
         contentView.addSubview(blurLabelForFilterName)
         blurLabelForFilterName.layer.zPosition = 1
-        contentView.addSubview(labelForDesc)
-        contentView.addSubview(buttonForSelectPhoto)
+        imageForFilter.addSubview(labelForDesc)
+        imageForFilter.addSubview(buttonForSelectPhoto)
         buttonForSelectPhoto.addSubview(labelForButton)
         buttonForSelectPhoto.addSubview(imageForButton)
         
-        
+        NSLayoutConstraint.activate([
+            imageForFilter.topAnchor.constraint(equalTo: contentView.topAnchor),
+            imageForFilter.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            imageForFilter.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            imageForFilter.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            
+            blurView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            blurView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            
+            blurLabelForFilterName.centerXAnchor.constraint(equalTo: blurView.centerXAnchor),
+            blurLabelForFilterName.centerYAnchor.constraint(equalTo: blurView.centerYAnchor),
+            
+            labelForDesc.topAnchor.constraint(equalTo: blurView.bottomAnchor, constant: 10),
+            labelForDesc.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            labelForDesc.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            
+            buttonForSelectPhoto.topAnchor.constraint(equalTo: labelForDesc.bottomAnchor, constant: 30),
+            buttonForSelectPhoto.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            buttonForSelectPhoto.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.5),
+            buttonForSelectPhoto.heightAnchor.constraint(equalToConstant: 70),
+            
+            labelForButton.leadingAnchor.constraint(equalTo: buttonForSelectPhoto.leadingAnchor, constant: 5),
+            labelForButton.centerYAnchor.constraint(equalTo: buttonForSelectPhoto.centerYAnchor),
+            
+            imageForButton.leadingAnchor.constraint(equalTo: labelForButton.trailingAnchor, constant: 5),
+            imageForButton.centerYAnchor.constraint(equalTo: buttonForSelectPhoto.centerYAnchor),
+            
+
+            
+            
+        ])
         
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
-
 }
