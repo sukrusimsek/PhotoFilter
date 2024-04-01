@@ -18,6 +18,9 @@ final class FirstHomeView: UIViewController {
     private var collectionView: UICollectionView!
     private var timer: Timer?
     private var currentPage = 0
+    private let color1 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 1)
+    private let color2 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.5)
+    private let color3 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.1)
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.view = self
@@ -68,6 +71,8 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FirstHomeCell", for: indexPath) as! FirstHomeCell
         cell.buttonForSelectPhoto.addTarget(self, action: #selector(tappedChoosePhotosForFilter), for: .touchUpInside)
+        cell.imageForFilter.applyGradient(colors: [color1, color2, color3] ,startPoint: CGPoint(x: 0.5, y: 1.0), endPoint: CGPoint(x: 0.5, y: 0.0), locations: [0.19,0.51,0.95])
+        
         switch indexPath.row {
         case 0:
             cell.imageForFilter.image = UIImage(named: "fuji")
@@ -75,17 +80,13 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
             cell.labelForDesc.text = "Fuji mountain lake in Morning"
             cell.labelForButton.textColor = .systemBlue
             cell.imageForButton.tintColor = .systemBlue
-            cell.imageForFilter.applyGradient(colors: [.black, .clear], locations: [0.0, 0.5])
-            cell.applyGradient(colors: [.black, .clear], locations: [0, 3])
-
+            
         case 1:
             cell.imageForFilter.image = UIImage(named: "african")
             cell.blurLabelForFilterName.text = "FILTER - ENERGIC"
             cell.labelForDesc.text = "African American Woman"
             cell.labelForButton.textColor = .systemYellow
             cell.imageForButton.tintColor = .systemYellow
-            cell.imageForFilter.applyGradient(colors: [.black, .clear], locations: [0.0, 0.5])
-            cell.applyGradient(colors: [.black, .clear], locations: [0, 3])
 
         case 2:
             cell.imageForFilter.image = UIImage(named: "handcream")
@@ -93,9 +94,6 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
             cell.labelForDesc.text = "Hand cream product package"
             cell.labelForButton.textColor = .systemGreen
             cell.imageForButton.tintColor = .systemGreen
-            
-
-            
             
         default:
             break
