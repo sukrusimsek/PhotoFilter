@@ -92,7 +92,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         
         
         homeIndicator.translatesAutoresizingMaskIntoConstraints = false
-        homeIndicator.backgroundColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.2)
+        homeIndicator.backgroundColor = UIColor(white: 1, alpha: 0.2)
         homeIndicator.layer.cornerRadius = 1
         homeIndicator.layer.masksToBounds = true
         viewForBackgroundPickerSaveShowButton.addSubview(homeIndicator)

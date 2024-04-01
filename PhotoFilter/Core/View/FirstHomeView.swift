@@ -39,15 +39,13 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
-        
-        // collectionView öğesini oluştur
+        layout.sectionInset = UIEdgeInsets.zero
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(FirstHomeCell.self, forCellWithReuseIdentifier: "FirstHomeCell")
         collectionView.isPagingEnabled = true
-        
         view.addSubview(collectionView)
         
         NSLayoutConstraint.activate([
@@ -60,8 +58,7 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        // Örneğin, her hücrenin boyutunu ekran boyutuna ayarlayabilirsiniz
-        return CGSize(width: collectionView.bounds.width, height: collectionView.bounds.height)
+        return CGSize(width: view.frame.size.width, height: view.frame.size.height)
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -78,19 +75,22 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
             cell.labelForDesc.text = "Fuji mountain lake in Morning"
             cell.labelForButton.textColor = .systemBlue
             cell.imageForButton.tintColor = .systemBlue
-            
+            cell.imageForFilter.applyGradient(colors: [.black, .clear], locations: [0.0, 0.5])
+            cell.applyGradient(colors: [.black, .clear], locations: [0, 3])
+
         case 1:
             cell.imageForFilter.image = UIImage(named: "african")
             cell.blurLabelForFilterName.text = "FILTER - ENERGIC"
-            cell.labelForDesc.text = "African American woman"
+            cell.labelForDesc.text = "African American Woman"
             cell.labelForButton.textColor = .systemYellow
             cell.imageForButton.tintColor = .systemYellow
-
+            cell.imageForFilter.applyGradient(colors: [.black, .clear], locations: [0.0, 0.5])
+            cell.applyGradient(colors: [.black, .clear], locations: [0, 3])
 
         case 2:
             cell.imageForFilter.image = UIImage(named: "handcream")
             cell.blurLabelForFilterName.text = "FILTER - BEATIFUL"
-            cell.labelForDesc.text = "Hand crean product package"
+            cell.labelForDesc.text = "Hand cream product package"
             cell.labelForButton.textColor = .systemGreen
             cell.imageForButton.tintColor = .systemGreen
             

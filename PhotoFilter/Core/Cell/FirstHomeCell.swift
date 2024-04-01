@@ -9,6 +9,7 @@ import UIKit
 
 class FirstHomeCell: UICollectionViewCell {
     
+    
     let imageForFilter: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
@@ -19,24 +20,26 @@ class FirstHomeCell: UICollectionViewCell {
     let blurLabelForFilterName: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 11, weight: .light)
+        label.font = .systemFont(ofSize: 12, weight: .regular)
         label.textColor = .white
         label.layer.cornerRadius = 5
         label.layer.masksToBounds = true
         return label
     }()
     let blurView: UIVisualEffectView = {
-        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
         let blurView = UIVisualEffectView(effect: blurEffect)
         blurView.translatesAutoresizingMaskIntoConstraints = false
-        blurView.layer.cornerRadius = 5
+        blurView.layer.cornerRadius = 16
+        blurView.layer.borderColor = UIColor(white: 1, alpha: 0.2).cgColor
+        blurView.layer.borderWidth = 1
         blurView.layer.masksToBounds = true
         return blurView
     }()
     let labelForDesc: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 24, weight: .medium)
+        label.font = .systemFont(ofSize: 32, weight: .medium)
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 2
@@ -47,7 +50,7 @@ class FirstHomeCell: UICollectionViewCell {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = UIColor(white: 1, alpha: 0.2)
-        button.layer.cornerRadius = 16
+        button.layer.cornerRadius = 28
         button.layer.masksToBounds = true
         return button
     }()
@@ -55,21 +58,43 @@ class FirstHomeCell: UICollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 16, weight: .semibold)
-        label.text = "Filter Your Photos"
+        label.text = "   Filter Your Photos"
         label.numberOfLines = 1
         label.textAlignment = .left
         return label
+    }()
+    let viewForButtonBack: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(white: 1, alpha: 0.3)
+        view.layer.cornerRadius = 16
+        view.layer.masksToBounds = true
+        return view
     }()
     let imageForButton: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "cellSelectButton")
-        imageView.contentMode = .scaleAspectFit
-        imageView.frame = CGRect(x: 0, y: 0, width: 21, height: 14)
-        imageView.layer.cornerRadius = 7
-        imageView.layer.masksToBounds = true
         return imageView
     }()
+    let viewBottom: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(white: 1, alpha: 0.2)
+        return view
+    }()
+//    let gradient: UIView = {
+//        
+//        let view = UIView()
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        view.setGradientBackground()
+//        
+////        view.applyGradient(colors: [UIColor.darkGray, UIColor.gray, UIColor.lightGray], startPoint: CGPoint(x: 0.5, y: 0.0), endPoint: CGPoint(x: 0.5, y: 1.0), locations: [0.0,0.5,0.9])
+//        return view
+//    [UIColor(red: 0.137, green: 0.137, blue: 0.137, alpha: 0),
+//                                UIColor(red: 0.136, green: 0.136, blue: 0.136, alpha: 0.7),
+//                                UIColor(red: 0.135, green: 0.135, blue: 0.135, alpha: 1)]
+    
     
     
     override init(frame: CGRect) {
@@ -77,40 +102,63 @@ class FirstHomeCell: UICollectionViewCell {
         contentView.addSubview(imageForFilter)
         contentView.addSubview(blurView)
         contentView.addSubview(blurLabelForFilterName)
+//        contentView.addSubview(viewBottom)
+       
+        
         blurLabelForFilterName.layer.zPosition = 1
         imageForFilter.addSubview(labelForDesc)
         imageForFilter.addSubview(buttonForSelectPhoto)
         buttonForSelectPhoto.addSubview(labelForButton)
-        buttonForSelectPhoto.addSubview(imageForButton)
+        buttonForSelectPhoto.addSubview(viewForButtonBack)
+        viewForButtonBack.addSubview(imageForButton)
         
         NSLayoutConstraint.activate([
-            imageForFilter.topAnchor.constraint(equalTo: contentView.topAnchor),
+//            gradient.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+//            gradient.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+//            gradient.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+//            gradient.topAnchor.constraint(equalTo: contentView.topAnchor),
+            
+//            viewBottom.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+//            viewBottom.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+//            viewBottom.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+//            viewBottom.heightAnchor.constraint(equalToConstant: 212),
+            
+            imageForFilter.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -30),
             imageForFilter.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageForFilter.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            imageForFilter.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            imageForFilter.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -212),
             
-            blurView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            blurView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            
-            blurLabelForFilterName.centerXAnchor.constraint(equalTo: blurView.centerXAnchor),
-            blurLabelForFilterName.centerYAnchor.constraint(equalTo: blurView.centerYAnchor),
-            
+            blurView.topAnchor.constraint(equalTo: blurLabelForFilterName.topAnchor, constant: -10),
+            blurView.leadingAnchor.constraint(equalTo: blurLabelForFilterName.leadingAnchor, constant: -10),
+            blurView.trailingAnchor.constraint(equalTo: blurLabelForFilterName.trailingAnchor, constant: 10),
+            blurView.bottomAnchor.constraint(equalTo: blurLabelForFilterName.bottomAnchor,constant: 10),
+
+            blurLabelForFilterName.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            blurLabelForFilterName.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+
             labelForDesc.topAnchor.constraint(equalTo: blurView.bottomAnchor, constant: 10),
-            labelForDesc.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            labelForDesc.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            labelForDesc.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
+            labelForDesc.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
             
-            buttonForSelectPhoto.topAnchor.constraint(equalTo: labelForDesc.bottomAnchor, constant: 30),
+//            buttonForSelectPhoto.centerXAnchor.constraint(equalTo: viewBottom.centerXAnchor),
+//            buttonForSelectPhoto.centerYAnchor.constraint(equalTo: viewBottom.centerYAnchor),
+            buttonForSelectPhoto.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -100),
             buttonForSelectPhoto.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            buttonForSelectPhoto.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.5),
-            buttonForSelectPhoto.heightAnchor.constraint(equalToConstant: 70),
+            buttonForSelectPhoto.heightAnchor.constraint(equalToConstant: 56),
+            buttonForSelectPhoto.widthAnchor.constraint(equalToConstant: 212),
             
             labelForButton.leadingAnchor.constraint(equalTo: buttonForSelectPhoto.leadingAnchor, constant: 5),
             labelForButton.centerYAnchor.constraint(equalTo: buttonForSelectPhoto.centerYAnchor),
             
-            imageForButton.leadingAnchor.constraint(equalTo: labelForButton.trailingAnchor, constant: 5),
-            imageForButton.centerYAnchor.constraint(equalTo: buttonForSelectPhoto.centerYAnchor),
+            viewForButtonBack.trailingAnchor.constraint(equalTo: buttonForSelectPhoto.trailingAnchor, constant: -10),
+            viewForButtonBack.centerYAnchor.constraint(equalTo: buttonForSelectPhoto.centerYAnchor),
+            viewForButtonBack.heightAnchor.constraint(equalToConstant: 34),
+            viewForButtonBack.widthAnchor.constraint(equalToConstant: 34),
             
-
+            imageForButton.centerXAnchor.constraint(equalTo: viewForButtonBack.centerXAnchor),
+            imageForButton.centerYAnchor.constraint(equalTo: viewForButtonBack.centerYAnchor),
+            imageForButton.heightAnchor.constraint(equalToConstant: 14),
+            imageForButton.widthAnchor.constraint(equalToConstant: 21),
             
             
         ])
@@ -121,3 +169,4 @@ class FirstHomeCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
+

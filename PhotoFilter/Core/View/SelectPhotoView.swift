@@ -31,12 +31,10 @@ final class SelectPhotoView: UIViewController {
 extension SelectPhotoView: SelectPhotoViewInterface {
     func configureVC() {
         
-        view.backgroundColor = .darkGray
+        view.backgroundColor = UIColor(rgb: 0x191919)
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = UIColor(rgb: 0x101010)
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.white,
-                                          .font: UIFont.systemFont(ofSize: 20, weight: .semibold)]
-        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.compactAppearance = appearance
@@ -61,7 +59,7 @@ extension SelectPhotoView: SelectPhotoViewInterface {
         tabView.backgroundColor = UIColor(rgb: 0x101010)
         
         homeIndicator.translatesAutoresizingMaskIntoConstraints = false
-        homeIndicator.backgroundColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.2)
+        homeIndicator.backgroundColor = UIColor(white: 1, alpha: 0.2)
         homeIndicator.layer.cornerRadius = 1
         homeIndicator.layer.masksToBounds = true
         view.addSubview(tabView)
@@ -82,7 +80,7 @@ extension SelectPhotoView: SelectPhotoViewInterface {
     func configureDefaultSelectView() {
         defaultViewButton.translatesAutoresizingMaskIntoConstraints = false
         defaultViewButton.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
-        defaultViewButton.image = UIImage(named: "defaultImage")
+        defaultViewButton.image = UIImage(named: "defaultImage2")
         view.addSubview(defaultViewButton)
         
         NSLayoutConstraint.activate([
@@ -97,7 +95,7 @@ extension SelectPhotoView: SelectPhotoViewInterface {
         selectPhoto.translatesAutoresizingMaskIntoConstraints = false
         selectPhoto.setTitle("  Select Photo +  ", for: .normal)
         selectPhoto.setTitleColor(.white, for: .normal)
-        selectPhoto.backgroundColor = UIColor(rgb: 0xDFCECE)
+        selectPhoto.backgroundColor = UIColor(white: 1, alpha: 0.2)
         selectPhoto.layer.cornerRadius = 15
         selectPhoto.layer.masksToBounds = true
         selectPhoto.addTarget(self, action: #selector(tappedSelectPhotoPage), for: .touchUpInside)

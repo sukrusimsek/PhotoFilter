@@ -43,10 +43,12 @@ class CustomCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             imageForFilter.widthAnchor.constraint(equalTo: contentView.widthAnchor),
             imageForFilter.heightAnchor.constraint(equalTo: contentView.heightAnchor),
+            
             blurView.topAnchor.constraint(equalTo: labelForFilterName.topAnchor),
             blurView.leadingAnchor.constraint(equalTo: labelForFilterName.leadingAnchor, constant: -3),
             blurView.trailingAnchor.constraint(equalTo: labelForFilterName.trailingAnchor, constant: 3),
             blurView.bottomAnchor.constraint(equalTo: labelForFilterName.bottomAnchor),
+            
             labelForFilterName.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5),
             labelForFilterName.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 6),
         ])
