@@ -81,13 +81,29 @@ class FirstHomeCell: UICollectionViewCell {
     private let color2 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.5)
     private let color3 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.1)
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        if let gradientLayer = imageForFilter.layer.sublayers?.first(where: { $0 is CAGradientLayer }) {
+            gradientLayer.removeFromSuperlayer()
+        }
+    }
+    func applyGradient(colors: [UIColor], startPoint: CGPoint, endPoint: CGPoint, locations: [NSNumber]? = [0.0, 0.7]) {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = contentView.bounds
+        gradientLayer.colors = colors.map { $0.cgColor }
+        gradientLayer.startPoint = startPoint
+        gradientLayer.endPoint = endPoint
+        gradientLayer.locations = locations
+        imageForFilter.layer.insertSublayer(gradientLayer, at: 0)
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: .zero)
         contentView.addSubview(imageForFilter)
         contentView.addSubview(blurView)
         contentView.addSubview(blurLabelForFilterName)
         contentView.backgroundColor = UIColor(red: 30, green: 30, blue: 30)
-        
         
         
         blurLabelForFilterName.layer.zPosition = 1
@@ -99,7 +115,7 @@ class FirstHomeCell: UICollectionViewCell {
         
         NSLayoutConstraint.activate([
 
-            imageForFilter.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -30),
+            imageForFilter.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageForFilter.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageForFilter.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             imageForFilter.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -212),

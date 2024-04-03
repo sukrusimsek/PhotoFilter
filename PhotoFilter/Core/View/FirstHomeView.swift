@@ -34,6 +34,8 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
     func configureVC() {
         print("configureVCFirstHomeView")
         
+
+        
     }
     
     
@@ -43,13 +45,15 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
         layout.sectionInset = UIEdgeInsets.zero
+        layout.itemSize = CGSize(width: view.frame.size.width, height: view.frame.size.height)
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(FirstHomeCell.self, forCellWithReuseIdentifier: "FirstHomeCell")
-        collectionView.reloadData()
+        collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.isPagingEnabled = true
+        
         collectionView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 150, bottom: 200, right: 150)
         collectionView.showsHorizontalScrollIndicator = true
         collectionView.indicatorStyle = .white
@@ -75,7 +79,7 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FirstHomeCell", for: indexPath) as! FirstHomeCell
         cell.buttonForSelectPhoto.addTarget(self, action: #selector(tappedChoosePhotosForFilter), for: .touchUpInside)
-        cell.imageForFilter.applyGradient(colors: [color1, color2, color3] ,startPoint: CGPoint(x: 0.5, y: 1.0), endPoint: CGPoint(x: 0.5, y: 0.0), locations: [0.13,0.51,0.95])
+        cell.applyGradient(colors: [color1, color2, color3] ,startPoint: CGPoint(x: 0.5, y: 1.0), endPoint: CGPoint(x: 0.5, y: 0.0), locations: [0.35,0.70,0.95])
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             collectionView.reloadData()
         }
@@ -83,7 +87,7 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         
         switch indexPath.row {
         case 0:
-            cell.imageForFilter.image = UIImage(named: "fuji")
+            cell.imageForFilter.image = UIImage(named: "123")
             cell.blurLabelForFilterName.text = "FILTER - MEDIAN"
             cell.labelForDesc.text = "Fuji mountain lake in Morning"
             cell.labelForButton.textColor = .systemBlue

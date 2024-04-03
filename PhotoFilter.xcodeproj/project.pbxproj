@@ -27,7 +27,6 @@
 		8DC9FB112BB4F01F00BC1A82 /* FirstHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC9FB102BB4F01F00BC1A82 /* FirstHomeView.swift */; };
 		8DC9FB132BB4F03300BC1A82 /* FirstHomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC9FB122BB4F03300BC1A82 /* FirstHomeViewModel.swift */; };
 		8DC9FB152BB4F36400BC1A82 /* FirstHomeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC9FB142BB4F36400BC1A82 /* FirstHomeCell.swift */; };
-		8DC9FB1A2BBB076F00BC1A82 /* UIView+Ext+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC9FB192BBB076F00BC1A82 /* UIView+Ext+Gradient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,7 +51,6 @@
 		8DC9FB102BB4F01F00BC1A82 /* FirstHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstHomeView.swift; sourceTree = "<group>"; };
 		8DC9FB122BB4F03300BC1A82 /* FirstHomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstHomeViewModel.swift; sourceTree = "<group>"; };
 		8DC9FB142BB4F36400BC1A82 /* FirstHomeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstHomeCell.swift; sourceTree = "<group>"; };
-		8DC9FB192BBB076F00BC1A82 /* UIView+Ext+Gradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext+Gradient.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,7 +109,6 @@
 				8D3308342B94F3FB0056D19B /* Alert+Ext.swift */,
 				8D6061952B97B0E900DCEE5F /* ImageCompress.swift */,
 				8DC9FB0A2BB3047400BC1A82 /* UIBarButtonItemSize+Ext.swift */,
-				8DC9FB192BBB076F00BC1A82 /* UIView+Ext+Gradient.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -239,7 +236,6 @@
 				8D848B422B8BB3700063C8D9 /* HomeScreen.swift in Sources */,
 				8DC9FB0F2BB307F700BC1A82 /* SelectPhotoViewModel.swift in Sources */,
 				8DC9FB0B2BB3047400BC1A82 /* UIBarButtonItemSize+Ext.swift in Sources */,
-				8DC9FB1A2BBB076F00BC1A82 /* UIView+Ext+Gradient.swift in Sources */,
 				8D848B3E2B8BB3700063C8D9 /* AppDelegate.swift in Sources */,
 				8D848B592B8BBDDB0063C8D9 /* UIColor+Ext.swift in Sources */,
 				8DC9FB152BB4F36400BC1A82 /* FirstHomeCell.swift in Sources */,
