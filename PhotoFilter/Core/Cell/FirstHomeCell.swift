@@ -92,10 +92,10 @@ class FirstHomeCell: UICollectionViewCell {
         
         blurLabelForFilterName.layer.zPosition = 1
         imageForFilter.addSubview(labelForDesc)
-        imageForFilter.addSubview(buttonForSelectPhoto)
-        buttonForSelectPhoto.addSubview(labelForButton)
-        buttonForSelectPhoto.addSubview(viewForButtonBack)
-        viewForButtonBack.addSubview(imageForButton)
+        contentView.addSubview(buttonForSelectPhoto)
+        imageForFilter.addSubview(labelForButton)
+        imageForFilter.addSubview(viewForButtonBack)
+        imageForFilter.addSubview(imageForButton)
         
         NSLayoutConstraint.activate([
 
@@ -121,6 +121,7 @@ class FirstHomeCell: UICollectionViewCell {
             buttonForSelectPhoto.heightAnchor.constraint(equalToConstant: 56),
             buttonForSelectPhoto.widthAnchor.constraint(equalToConstant: 212),
             
+            
             labelForButton.leadingAnchor.constraint(equalTo: buttonForSelectPhoto.leadingAnchor, constant: 5),
             labelForButton.centerYAnchor.constraint(equalTo: buttonForSelectPhoto.centerYAnchor),
             
@@ -136,8 +137,9 @@ class FirstHomeCell: UICollectionViewCell {
             
             
         ])
-        
+
     }
+
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

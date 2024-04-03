@@ -50,6 +50,9 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         collectionView.register(FirstHomeCell.self, forCellWithReuseIdentifier: "FirstHomeCell")
         collectionView.reloadData()
         collectionView.isPagingEnabled = true
+        collectionView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 150, bottom: 200, right: 150)
+        collectionView.showsHorizontalScrollIndicator = true
+        collectionView.indicatorStyle = .white
         view.addSubview(collectionView)
         
         NSLayoutConstraint.activate([
@@ -76,6 +79,7 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             collectionView.reloadData()
         }
+
         
         switch indexPath.row {
         case 0:
