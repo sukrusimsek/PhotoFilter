@@ -33,9 +33,9 @@ final class FirstHomeView: UIViewController {
 extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func configureVC() {
         print("configureVCFirstHomeView")
-//        startTimer()
         
     }
+    
     
     func configureCollectionView() {
         let layout = UICollectionViewFlowLayout()
@@ -48,6 +48,7 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(FirstHomeCell.self, forCellWithReuseIdentifier: "FirstHomeCell")
+        collectionView.reloadData()
         collectionView.isPagingEnabled = true
         view.addSubview(collectionView)
         
@@ -71,7 +72,10 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FirstHomeCell", for: indexPath) as! FirstHomeCell
         cell.buttonForSelectPhoto.addTarget(self, action: #selector(tappedChoosePhotosForFilter), for: .touchUpInside)
-        cell.imageForFilter.applyGradient(colors: [color1, color2, color3] ,startPoint: CGPoint(x: 0.5, y: 1.0), endPoint: CGPoint(x: 0.5, y: 0.0), locations: [0.19,0.51,0.95])
+        cell.imageForFilter.applyGradient(colors: [color1, color2, color3] ,startPoint: CGPoint(x: 0.5, y: 1.0), endPoint: CGPoint(x: 0.5, y: 0.0), locations: [0.13,0.51,0.95])
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            collectionView.reloadData()
+        }
         
         switch indexPath.row {
         case 0:
@@ -99,32 +103,11 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
             break
         }
         return cell
+        
     }
     @objc func tappedChoosePhotosForFilter() {
         print("tappedChoosePhotosForFilter")
         navigationController?.pushViewController(SelectPhotoView(), animated: true)
     }
-//    
-//    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-//        // Kullanıcı koleksiyonu elle kaydırdığında, otomatik geçişleri durdurun
-//        timer?.invalidate()
-//        timer = nil
-//    }
-//    
-//    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-//        // Kullanıcı elle kaydırma işlemi bittiğinde, otomatik geçişleri yeniden başlatın
-//        startTimer()
-//    }
-//    
-//    
-//    
-//    func startTimer() {
-//        timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(scrollToNextPage), userInfo: nil, repeats: true)
-//    }
-//    @objc func scrollToNextPage() {
-//        currentPage = (currentPage + 1) % collectionView.numberOfItems(inSection: 0)
-//        let indexPath = IndexPath(item: currentPage, section: 0)
-//        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-//    }
-//    
+    
 }

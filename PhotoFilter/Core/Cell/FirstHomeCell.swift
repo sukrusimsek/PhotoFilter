@@ -77,7 +77,9 @@ class FirstHomeCell: UICollectionViewCell {
         imageView.image = UIImage(named: "cellSelectButton")
         return imageView
     }()
-    
+    private let color1 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 1)
+    private let color2 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.5)
+    private let color3 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.1)
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -85,6 +87,8 @@ class FirstHomeCell: UICollectionViewCell {
         contentView.addSubview(blurView)
         contentView.addSubview(blurLabelForFilterName)
         contentView.backgroundColor = UIColor(red: 30, green: 30, blue: 30)
+        
+        
         
         blurLabelForFilterName.layer.zPosition = 1
         imageForFilter.addSubview(labelForDesc)
