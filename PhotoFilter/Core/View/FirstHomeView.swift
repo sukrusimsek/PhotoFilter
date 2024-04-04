@@ -27,13 +27,22 @@ final class FirstHomeView: UIViewController {
         viewModel.viewDidLoad()
         
     }
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        navigationController?.setNavigationBarHidden(true, animated: false)
+//    }
+//
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//        navigationController?.setNavigationBarHidden(false, animated: false)
+//    }
+
 }
 
 
 extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func configureVC() {
         print("configureVCFirstHomeView")
-        
 
         
     }
@@ -75,15 +84,31 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 3
     }
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if let firstCell = cell as? FirstHomeCell {
+            firstCell.animateIn()
+            
+        }
+        if indexPath.item == 2 {
+            print("Son hücreye ulaşıldı.")
+        }
+
+        if let lastCell = collectionView.visibleCells.last, let lastCellIndexPath = collectionView.indexPath(for: lastCell), indexPath == lastCellIndexPath {
+            if let firstCell = cell as? FirstHomeCell {
+                firstCell.animateOut()
+            }
+        }
+        
+    }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FirstHomeCell", for: indexPath) as! FirstHomeCell
         cell.buttonForSelectPhoto.addTarget(self, action: #selector(tappedChoosePhotosForFilter), for: .touchUpInside)
+        
         cell.applyGradient(colors: [color1, color2, color3] ,startPoint: CGPoint(x: 0.5, y: 1.0), endPoint: CGPoint(x: 0.5, y: 0.0), locations: [0.35,0.70,0.95])
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            collectionView.reloadData()
-        }
-
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+//            collectionView.reloadData()
+//        }
         
         switch indexPath.row {
         case 0:
@@ -116,6 +141,7 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
     @objc func tappedChoosePhotosForFilter() {
         print("tappedChoosePhotosForFilter")
         navigationController?.pushViewController(SelectPhotoView(), animated: true)
+       
     }
     
 }

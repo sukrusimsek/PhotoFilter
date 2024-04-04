@@ -48,6 +48,7 @@ extension SelectPhotoView: SelectPhotoViewInterface {
     }
     @objc private func tappedBackPage() {
         print("tappedBackPage")
+//        navigationController?.dismiss(animated: true)
     }
     @objc private func goToSettingScreenTapped() {
         print("goToSettingScreenTapped")

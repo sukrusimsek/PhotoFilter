@@ -77,16 +77,35 @@ class FirstHomeCell: UICollectionViewCell {
         imageView.image = UIImage(named: "cellSelectButton")
         return imageView
     }()
-    private let color1 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 1)
-    private let color2 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.5)
-    private let color3 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.1)
-    
+//    let viewForAnimation: UIView = {
+//        let view = UIView()
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        view.backgroundColor = .blue
+//        return view
+//    }()
+    override func layoutSubviews() {
+        super.layoutSubviews()
+//        viewForAnimation.frame = CGRect(x: 0, y: contentView.frame.height * 0.5, width: contentView.frame.width, height: 200)
+    }
     override func prepareForReuse() {
         super.prepareForReuse()
         
         if let gradientLayer = imageForFilter.layer.sublayers?.first(where: { $0 is CAGradientLayer }) {
             gradientLayer.removeFromSuperlayer()
         }
+        blurView.layer.removeAllAnimations()
+        blurLabelForFilterName.layer.removeAllAnimations()
+        labelForDesc.layer.removeAllAnimations()
+        
+        // Öğelerin alfa değerlerini sıfırla
+        blurView.alpha = 0.0
+        blurLabelForFilterName.alpha = 0.0
+        labelForDesc.alpha = 0.0
+        
+        // Öğeleri başlangıç konumlarına geri getir
+        blurView.frame.origin.y = contentView.frame.height - 200
+        blurLabelForFilterName.frame.origin.y = contentView.frame.height - 200
+        labelForDesc.frame.origin.y = contentView.frame.height - 200
     }
     func applyGradient(colors: [UIColor], startPoint: CGPoint, endPoint: CGPoint, locations: [NSNumber]? = [0.0, 0.7]) {
         let gradientLayer = CAGradientLayer()
@@ -104,7 +123,7 @@ class FirstHomeCell: UICollectionViewCell {
         contentView.addSubview(blurView)
         contentView.addSubview(blurLabelForFilterName)
         contentView.backgroundColor = UIColor(red: 30, green: 30, blue: 30)
-        
+//        contentView.addSubview(viewForAnimation)
         
         blurLabelForFilterName.layer.zPosition = 1
         imageForFilter.addSubview(labelForDesc)
@@ -151,14 +170,76 @@ class FirstHomeCell: UICollectionViewCell {
             imageForButton.heightAnchor.constraint(equalToConstant: 14),
             imageForButton.widthAnchor.constraint(equalToConstant: 21),
             
-            
         ])
-
+        
     }
 
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    func animateIn() {
+        blurLabelForFilterName.alpha = 0.0
+        blurView.alpha = 0.0
+        labelForDesc.alpha = 0.0
+        blurView.frame.origin.y = contentView.frame.height - 220
+        blurLabelForFilterName.frame.origin.y = contentView.frame.height - 220
+        labelForDesc.frame.origin.y = contentView.frame.height - 220
+        
+        
+        UIView.animate(withDuration: 1.5) {
+            self.blurView.frame.origin.y = self.contentView.frame.height * 0.5
+            self.blurLabelForFilterName.frame.origin.y = self.blurView.frame.midY
+            self.labelForDesc.frame.origin.y = self.blurView.frame.maxY + 10
+        }
+        
+        UIView.animate(withDuration: 1.5, delay: 0.3, options: [.curveEaseOut], animations: {
+            self.blurLabelForFilterName.alpha = 1.0
+            self.blurView.alpha = 1.0
+            self.labelForDesc.alpha = 1.0
+        }, completion: nil)
+    }
+    
+    func animateOut() {
+        UIView.animate(withDuration: 1.5) {
+            self.blurView.frame.origin.y = -self.contentView.frame.height * 0.3
+            self.blurLabelForFilterName.frame.origin.y = self.blurView.frame.midY
+            self.labelForDesc.frame.origin.y = self.blurView.frame.maxY + 10
+        }
+        UIView.animate(withDuration: 1.5, delay: 0.3, options: [.curveEaseOut], animations: {
+            self.blurLabelForFilterName.alpha = 0.0
+            self.blurView.alpha = 0.0
+            self.labelForDesc.alpha = 0.0
+        }, completion: nil)
+    }
+
+    
+//    func animateOut() {
+//        UIView.animate(withDuration: 1.5) {
+//            self.blurView.frame.origin.y = self.contentView.frame.height * 0.3
+//            self.blurLabelForFilterName.frame.origin.y = self.blurView.frame.midY
+//            self.labelForDesc.frame.origin.y = self.blurView.frame.maxY + 10
+//        }
+//        UIView.animate(withDuration: 1.5, delay: 0.3, options: [.curveEaseOut], animations: {
+//            self.blurLabelForFilterName.alpha = 0.0
+//            self.blurView.alpha = 0.0
+//            self.labelForDesc.alpha = 0.0
+//        }, completion: nil)
+//    }
+    
+//    func animateOut() {
+//        UIView.animate(withDuration: 1.5) {
+//            self.blurView.frame.origin.y = self.contentView.frame.height * 0.3
+//            self.blurLabelForFilterName.frame.origin.y = self.contentView.frame.height * 0.3
+//            self.labelForDesc.frame.origin.y = self.blurView.frame.maxY + 10
+//            
+//            
+//            
+//        }
+//    }
+    
+    
+
+    
 }
 
