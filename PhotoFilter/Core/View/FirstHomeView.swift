@@ -12,6 +12,7 @@ protocol FirstHomeViewInterface: AnyObject {
     func configureCollectionView()
     func configureLabel()
     func configureLocalizationButton()
+    func configureFilterPhotosButton()
 }
 
 final class FirstHomeView: UIViewController {
@@ -24,8 +25,12 @@ final class FirstHomeView: UIViewController {
     private let color2 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.5)
     private let color3 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.1)
     
-    private var label: UILabel?
+    private var labelDeneme = UILabel()
     private let locationButton = UIButton()
+    private let button = UIButton()
+    private let labelForButton = UILabel()
+    private let viewBack = UIView()
+    private let imageViewForIcon = UIImageView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,22 +59,21 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         
     }
     func configureLabel() {
-        let label = UILabel()
-        label.text = "Fuji mountain lake in Morning"
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        label.textColor = UIColor(white: 1, alpha: 0.5)
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(label)
+        
+        labelDeneme.text = "Fuji mountain lake in Morning"
+        labelDeneme.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        labelDeneme.textColor = UIColor(white: 1, alpha: 0.5)
+        labelDeneme.textAlignment = .center
+        labelDeneme.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(labelDeneme)
         
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
-            label.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            label.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            label.heightAnchor.constraint(equalToConstant: 30)
+            labelDeneme.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            labelDeneme.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+//            label.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            label.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            label.heightAnchor.constraint(equalToConstant: 30)
         ])
-                
-        self.label = label
         
     }
     func configureLocalizationButton() {
@@ -101,14 +105,85 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
     @objc func tappedLocalizationButton() {
         print("tappedLocalizationButton")
     }
-    
+    func configureFilterPhotosButton() {
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = UIColor(white: 1, alpha: 0.2)
+        button.layer.cornerRadius = 28
+        button.layer.masksToBounds = true
+        view.addSubview(button)
+        labelForButton.translatesAutoresizingMaskIntoConstraints = false
+        labelForButton.font = .systemFont(ofSize: 16, weight: .semibold)
+        labelForButton.text = "   Filter Your Photos"
+        labelForButton.numberOfLines = 1
+        labelForButton.textAlignment = .left
+        button.addSubview(labelForButton)
+        viewBack.translatesAutoresizingMaskIntoConstraints = false
+        viewBack.backgroundColor = UIColor(white: 1, alpha: 0.3)
+        viewBack.layer.cornerRadius = 16
+        viewBack.layer.masksToBounds = true
+        button.addSubview(viewBack)
+        imageViewForIcon.translatesAutoresizingMaskIntoConstraints = false
+        imageViewForIcon.image = UIImage(named: "cellSelectButton")
+        button.addSubview(imageViewForIcon)
+        button.addTarget(self, action: #selector(tappedChoosePhotosForFilter), for: .touchUpInside)
+        
+        NSLayoutConstraint.activate([
+            button.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
+            button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            button.heightAnchor.constraint(equalToConstant: 56),
+            button.widthAnchor.constraint(equalToConstant: 212),
+            
+            
+            labelForButton.leadingAnchor.constraint(equalTo: button.leadingAnchor, constant: 5),
+            labelForButton.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+            
+            viewBack.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -10),
+            viewBack.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+            viewBack.heightAnchor.constraint(equalToConstant: 34),
+            viewBack.widthAnchor.constraint(equalToConstant: 34),
+            
+            imageViewForIcon.centerXAnchor.constraint(equalTo: viewBack.centerXAnchor),
+            imageViewForIcon.centerYAnchor.constraint(equalTo: viewBack.centerYAnchor),
+            imageViewForIcon.heightAnchor.constraint(equalToConstant: 14),
+            imageViewForIcon.widthAnchor.constraint(equalToConstant: 21),
+        ])
+        
+    }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard let label = label else { return }
         let initialX = scrollView.contentOffset.x + scrollView.frame.width
         let targetX = scrollView.contentOffset.x + scrollView.frame.width / 2
-        label.alpha = max(0, min(1, (initialX - targetX) / scrollView.frame.width))
-        label.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
+        labelDeneme.alpha = max(0, min(1, (initialX - targetX) / scrollView.frame.width))
+        labelDeneme.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
+        
+        labelDeneme.alpha = 0.0
+        labelDeneme.frame.origin.y = view.frame.height - 350
+        
+        let pageIndex = Int(scrollView.contentOffset.x / scrollView.bounds.width)
+        UIView.animate(withDuration: 1.8) {
+            self.labelDeneme.frame.origin.y = self.view.frame.height * 0.45
+//            self.blurLabelForFilterName.frame.origin.y = self.blurView.frame.midY - (self.blurView.frame.height / 4.5)
+//            self.labelForDesc.frame.origin.y = self.blurView.frame.maxY + 10
+        }
+        
+        UIView.animate(withDuration: 1.8, delay: 0.4, options: [.curveEaseOut], animations: {
+//            self.blurLabelForFilterName.alpha = 1.0
+//            self.blurView.alpha = 1.0
+            self.labelDeneme.alpha = 1.0
+        }, completion: nil)
+        
+        
+        switch pageIndex {
+        case 0:
+            labelDeneme.text = "Fuji mountain lake in Morning"
+        case 1:
+            labelDeneme.text = "African American Woman"
+        case 2:
+            labelDeneme.text = "Hand cream product package"
+        default:
+            break
+        }
         
         let locationButtonInitialX = scrollView.contentOffset.x + scrollView.frame.width
         let locationButtonTargetX = scrollView.contentOffset.x + scrollView.frame.width / 2
@@ -173,7 +248,6 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FirstHomeCell", for: indexPath) as! FirstHomeCell
-        cell.buttonForSelectPhoto.addTarget(self, action: #selector(tappedChoosePhotosForFilter), for: .touchUpInside)
         
         cell.applyGradient(colors: [color1, color2, color3] ,startPoint: CGPoint(x: 0.5, y: 1.0), endPoint: CGPoint(x: 0.5, y: 0.0), locations: [0.35,0.70,0.95])
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -185,22 +259,22 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
             cell.imageForFilter.image = UIImage(named: "fuji")
             cell.blurLabelForFilterName.text = "FILTER - MEDIAN"
             cell.labelForDesc.text = "Fuji mountain lake in Morning"
-            cell.labelForButton.textColor = .systemBlue
-            cell.imageForButton.tintColor = .systemBlue
+            labelForButton.textColor = .systemBlue
+            imageViewForIcon.tintColor = .systemBlue
             
         case 1:
             cell.imageForFilter.image = UIImage(named: "african")
             cell.blurLabelForFilterName.text = "FILTER - ENERGIC"
             cell.labelForDesc.text = "African American Woman"
-            cell.labelForButton.textColor = .systemYellow
-            cell.imageForButton.tintColor = .systemYellow
+            labelForButton.textColor = .systemYellow
+            imageViewForIcon.tintColor = .systemYellow
 
         case 2:
             cell.imageForFilter.image = UIImage(named: "handcream")
             cell.blurLabelForFilterName.text = "FILTER - BEATIFUL"
             cell.labelForDesc.text = "Hand cream product package"
-            cell.labelForButton.textColor = .systemGreen
-            cell.imageForButton.tintColor = .systemGreen
+            labelForButton.textColor = .systemGreen
+            imageViewForIcon.tintColor = .systemGreen
             
         default:
             break

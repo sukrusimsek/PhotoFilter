@@ -45,44 +45,6 @@ class FirstHomeCell: UICollectionViewCell {
         label.numberOfLines = 2
         return label
     }()
-    
-    let buttonForSelectPhoto: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor(white: 1, alpha: 0.2)
-        button.layer.cornerRadius = 28
-        button.layer.masksToBounds = true
-        return button
-    }()
-    let labelForButton: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
-        label.text = "   Filter Your Photos"
-        label.numberOfLines = 1
-        label.textAlignment = .left
-        return label
-    }()
-    let viewForButtonBack: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(white: 1, alpha: 0.3)
-        view.layer.cornerRadius = 16
-        view.layer.masksToBounds = true
-        return view
-    }()
-    let imageForButton: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "cellSelectButton")
-        return imageView
-    }()
-//    let viewForAnimation: UIView = {
-//        let view = UIView()
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        view.backgroundColor = .blue
-//        return view
-//    }()
     override func layoutSubviews() {
         super.layoutSubviews()
 //        viewForAnimation.frame = CGRect(x: 0, y: contentView.frame.height * 0.5, width: contentView.frame.width, height: 200)
@@ -116,14 +78,10 @@ class FirstHomeCell: UICollectionViewCell {
         contentView.addSubview(blurView)
         contentView.addSubview(blurLabelForFilterName)
         contentView.backgroundColor = UIColor(red: 30, green: 30, blue: 30)
-//        contentView.addSubview(viewForAnimation)
         
         blurLabelForFilterName.layer.zPosition = 1
         imageForFilter.addSubview(labelForDesc)
-        contentView.addSubview(buttonForSelectPhoto)
-        imageForFilter.addSubview(labelForButton)
-        imageForFilter.addSubview(viewForButtonBack)
-        imageForFilter.addSubview(imageForButton)
+
         
         NSLayoutConstraint.activate([
 
@@ -143,25 +101,6 @@ class FirstHomeCell: UICollectionViewCell {
             labelForDesc.topAnchor.constraint(equalTo: blurView.bottomAnchor, constant: 10),
             labelForDesc.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
             labelForDesc.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
-            
-            buttonForSelectPhoto.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -100),
-            buttonForSelectPhoto.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            buttonForSelectPhoto.heightAnchor.constraint(equalToConstant: 56),
-            buttonForSelectPhoto.widthAnchor.constraint(equalToConstant: 212),
-            
-            
-            labelForButton.leadingAnchor.constraint(equalTo: buttonForSelectPhoto.leadingAnchor, constant: 5),
-            labelForButton.centerYAnchor.constraint(equalTo: buttonForSelectPhoto.centerYAnchor),
-            
-            viewForButtonBack.trailingAnchor.constraint(equalTo: buttonForSelectPhoto.trailingAnchor, constant: -10),
-            viewForButtonBack.centerYAnchor.constraint(equalTo: buttonForSelectPhoto.centerYAnchor),
-            viewForButtonBack.heightAnchor.constraint(equalToConstant: 34),
-            viewForButtonBack.widthAnchor.constraint(equalToConstant: 34),
-            
-            imageForButton.centerXAnchor.constraint(equalTo: viewForButtonBack.centerXAnchor),
-            imageForButton.centerYAnchor.constraint(equalTo: viewForButtonBack.centerYAnchor),
-            imageForButton.heightAnchor.constraint(equalToConstant: 14),
-            imageForButton.widthAnchor.constraint(equalToConstant: 21),
             
         ])
         
