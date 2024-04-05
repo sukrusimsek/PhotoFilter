@@ -10,6 +10,8 @@ import UIKit
 protocol FirstHomeViewInterface: AnyObject {
     func configureVC()
     func configureCollectionView()
+    func configureLabel()
+    func configureLocalizationButton()
 }
 
 final class FirstHomeView: UIViewController {
@@ -21,11 +23,16 @@ final class FirstHomeView: UIViewController {
     private let color1 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 1)
     private let color2 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.5)
     private let color3 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.1)
+    
+    private var label: UILabel?
+    private let locationButton = UIButton()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.view = self
         viewModel.viewDidLoad()
         
+
     }
 //    override func viewWillAppear(_ animated: Bool) {
 //        super.viewWillAppear(animated)
@@ -46,7 +53,69 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
 
         
     }
+    func configureLabel() {
+        let label = UILabel()
+        label.text = "Fuji mountain lake in Morning"
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.textColor = UIColor(white: 1, alpha: 0.5)
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(label)
+        
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
+            label.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            label.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            label.heightAnchor.constraint(equalToConstant: 30)
+        ])
+                
+        self.label = label
+        
+    }
+    func configureLocalizationButton() {
+        locationButton.translatesAutoresizingMaskIntoConstraints = false
+        locationButton.setTitle("   EN   ", for: .normal)
+        locationButton.titleLabel?.font = .systemFont(ofSize: 12, weight: .regular)
+        locationButton.layer.cornerRadius = 9
+        locationButton.layer.masksToBounds = true
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.isUserInteractionEnabled = false
+        blurView.frame = locationButton.bounds
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        locationButton.insertSubview(blurView, at: 0)
+        blurView.leadingAnchor.constraint(equalTo: locationButton.leadingAnchor).isActive = true
+        blurView.trailingAnchor.constraint(equalTo: locationButton.trailingAnchor).isActive = true
+        blurView.topAnchor.constraint(equalTo: locationButton.topAnchor).isActive = true
+        blurView.bottomAnchor.constraint(equalTo: locationButton.bottomAnchor).isActive = true
+        view.addSubview(locationButton)
+        NSLayoutConstraint.activate([
+            locationButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            locationButton.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20),
+        ])
+        locationButton.addTarget(self, action: #selector(tappedLocalizationButton), for: .touchUpInside)
+        
+    }
     
+    
+    @objc func tappedLocalizationButton() {
+        print("tappedLocalizationButton")
+    }
+    
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let label = label else { return }
+        let initialX = scrollView.contentOffset.x + scrollView.frame.width
+        let targetX = scrollView.contentOffset.x + scrollView.frame.width / 2
+        label.alpha = max(0, min(1, (initialX - targetX) / scrollView.frame.width))
+        label.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
+        
+        let locationButtonInitialX = scrollView.contentOffset.x + scrollView.frame.width
+        let locationButtonTargetX = scrollView.contentOffset.x + scrollView.frame.width / 2
+        locationButton.alpha = max(0, min(1, (locationButtonInitialX - locationButtonTargetX) / scrollView.frame.width))
+        locationButton.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
+        
+    }
     
     func configureCollectionView() {
         let layout = UICollectionViewFlowLayout()
@@ -86,6 +155,7 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
     }
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let firstCell = cell as? FirstHomeCell {
+            
             firstCell.animateIn()
             
         }
@@ -93,11 +163,11 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
             print("Son hücreye ulaşıldı.")
         }
 
-        if let lastCell = collectionView.visibleCells.last, let lastCellIndexPath = collectionView.indexPath(for: lastCell), indexPath == lastCellIndexPath {
-            if let firstCell = cell as? FirstHomeCell {
-                firstCell.animateOut()
-            }
-        }
+//        if let lastCell = collectionView.visibleCells.last, let lastCellIndexPath = collectionView.indexPath(for: lastCell), indexPath == lastCellIndexPath {
+//            if let firstCell = cell as? FirstHomeCell {
+//                firstCell.animateOut()
+//            }
+//        }
         
     }
     
@@ -112,7 +182,7 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         
         switch indexPath.row {
         case 0:
-            cell.imageForFilter.image = UIImage(named: "123")
+            cell.imageForFilter.image = UIImage(named: "fuji")
             cell.blurLabelForFilterName.text = "FILTER - MEDIAN"
             cell.labelForDesc.text = "Fuji mountain lake in Morning"
             cell.labelForButton.textColor = .systemBlue
@@ -145,3 +215,4 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
     }
     
 }
+

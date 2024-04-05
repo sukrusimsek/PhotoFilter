@@ -22,5 +22,7 @@ extension FirstHomeViewModel: FirstHomeViewModelInterface {
     func viewDidLoad() {
         view?.configureVC()
         view?.configureCollectionView()
+        view?.configureLabel()
+        view?.configureLocalizationButton()
     }
 }
