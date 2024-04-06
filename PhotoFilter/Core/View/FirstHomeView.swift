@@ -66,8 +66,9 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
     
     func configureLocalizationButton() {
         locationButton.translatesAutoresizingMaskIntoConstraints = false
-        locationButton.setTitle("   EN   ", for: .normal)
+        locationButton.setTitle("EN", for: .normal)
         locationButton.titleLabel?.font = .systemFont(ofSize: 12, weight: .regular)
+        locationButton.setTitleColor(.white, for: .normal)
         locationButton.layer.cornerRadius = 9
         locationButton.layer.masksToBounds = true
         let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
@@ -76,10 +77,10 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         blurView.frame = locationButton.bounds
         blurView.translatesAutoresizingMaskIntoConstraints = false
         locationButton.insertSubview(blurView, at: 0)
-        blurView.leadingAnchor.constraint(equalTo: locationButton.leadingAnchor).isActive = true
-        blurView.trailingAnchor.constraint(equalTo: locationButton.trailingAnchor).isActive = true
-        blurView.topAnchor.constraint(equalTo: locationButton.topAnchor).isActive = true
-        blurView.bottomAnchor.constraint(equalTo: locationButton.bottomAnchor).isActive = true
+        blurView.leadingAnchor.constraint(equalTo: locationButton.leadingAnchor,constant: -32).isActive = true
+        blurView.trailingAnchor.constraint(equalTo: locationButton.trailingAnchor, constant: 32).isActive = true
+        blurView.topAnchor.constraint(equalTo: locationButton.topAnchor, constant: -18).isActive = true
+        blurView.bottomAnchor.constraint(equalTo: locationButton.bottomAnchor, constant: 18).isActive = true
         view.addSubview(locationButton)
         NSLayoutConstraint.activate([
             locationButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -168,7 +169,7 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
 
         NSLayoutConstraint.activate([
             blurLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            blurLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            blurLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 40),
             blurViewForLabel.topAnchor.constraint(equalTo: blurLabel.topAnchor, constant: -10),
             blurViewForLabel.leadingAnchor.constraint(equalTo: blurLabel.leadingAnchor, constant: -10),
             blurViewForLabel.trailingAnchor.constraint(equalTo: blurLabel.trailingAnchor, constant: 10),
@@ -181,20 +182,21 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         blurLabel.alpha = 0.0
         blurViewForLabel.alpha = 0.0
         labelDesc.alpha = 0.0
-        labelDesc.frame.origin.y = scrollView.frame.height - 300
-        blurViewForLabel.frame.origin.y = scrollView.frame.height - 400
-        blurLabel.frame.origin.y = scrollView.frame.height - 400
+        
+        labelDesc.frame.origin.y = view.frame.height - 300
+        blurViewForLabel.frame.origin.y = view.frame.height - 300
+        blurLabel.frame.origin.y = view.frame.height - 300
         
         let pageIndex = Int(scrollView.contentOffset.x / scrollView.bounds.width)
-        UIView.animate(withDuration: 0.8) {
-            self.blurViewForLabel.frame.origin.y = self.view.frame.height * 0.5
+        UIView.animate(withDuration: 1.8) {
+            self.blurViewForLabel.frame.origin.y = (self.view.frame.height * 0.5) + 30
             self.blurLabel.frame.origin.y = self.blurViewForLabel.frame.midY - (self.blurViewForLabel.frame.height / 4.5)
             self.labelDesc.frame.origin.y = self.blurViewForLabel.frame.origin.y + 50
 
  
         }
         
-        UIView.animate(withDuration: 0.8, delay: 0.5, options: [.curveEaseOut], animations: {
+        UIView.animate(withDuration: 1.8, delay: 0.5, options: [.curveEaseOut], animations: {
             self.blurLabel.alpha = 1.0
             self.blurViewForLabel.alpha = 1.0
             self.labelDesc.alpha = 1.0
