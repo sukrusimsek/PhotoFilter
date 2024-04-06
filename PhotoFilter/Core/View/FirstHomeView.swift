@@ -13,6 +13,7 @@ protocol FirstHomeViewInterface: AnyObject {
     func configureLabel()
     func configureLocalizationButton()
     func configureFilterPhotosButton()
+    func configureLabelsForScrolling()
 }
 
 final class FirstHomeView: UIViewController {
@@ -25,12 +26,23 @@ final class FirstHomeView: UIViewController {
     private let color2 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.5)
     private let color3 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.1)
     
-    private var labelDeneme = UILabel()
+    private var labelDesc = UILabel()
     private let locationButton = UIButton()
     private let button = UIButton()
     private let labelForButton = UILabel()
     private let viewBack = UIView()
     private let imageViewForIcon = UIImageView()
+    private let blurLabel = UILabel()
+    private let blurViewForLabel: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        blurView.layer.cornerRadius = 16
+        blurView.layer.borderColor = UIColor(white: 1, alpha: 0.2).cgColor
+        blurView.layer.borderWidth = 1
+        blurView.layer.masksToBounds = true
+        return blurView
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,43 +51,19 @@ final class FirstHomeView: UIViewController {
         
 
     }
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        navigationController?.setNavigationBarHidden(true, animated: false)
-//    }
-//
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        navigationController?.setNavigationBarHidden(false, animated: false)
-//    }
 
 }
 
 
 extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
+    
     func configureVC() {
         print("configureVCFirstHomeView")
 
         
     }
-    func configureLabel() {
-        
-        labelDeneme.text = "Fuji mountain lake in Morning"
-        labelDeneme.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        labelDeneme.textColor = UIColor(white: 1, alpha: 0.5)
-        labelDeneme.textAlignment = .center
-        labelDeneme.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(labelDeneme)
-        
-        NSLayoutConstraint.activate([
-            labelDeneme.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            labelDeneme.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-//            label.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            label.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            label.heightAnchor.constraint(equalToConstant: 30)
-        ])
-        
-    }
+    
     func configureLocalizationButton() {
         locationButton.translatesAutoresizingMaskIntoConstraints = false
         locationButton.setTitle("   EN   ", for: .normal)
@@ -106,7 +94,6 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         print("tappedLocalizationButton")
     }
     func configureFilterPhotosButton() {
-        
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = UIColor(white: 1, alpha: 0.2)
         button.layer.cornerRadius = 28
@@ -134,7 +121,6 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
             button.heightAnchor.constraint(equalToConstant: 56),
             button.widthAnchor.constraint(equalToConstant: 212),
             
-            
             labelForButton.leadingAnchor.constraint(equalTo: button.leadingAnchor, constant: 5),
             labelForButton.centerYAnchor.constraint(equalTo: button.centerYAnchor),
             
@@ -150,46 +136,103 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         ])
         
     }
+    func configureLabel() {
+        labelDesc.text = "Fuji mountain lake in Morning"
+        labelDesc.font = UIFont.systemFont(ofSize: 32, weight: .medium)
+        labelDesc.textColor = UIColor(white: 1, alpha: 1)
+        labelDesc.textAlignment = .center
+        labelDesc.numberOfLines = 2
+        labelDesc.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(labelDesc)
+        
+        NSLayoutConstraint.activate([
+            labelDesc.topAnchor.constraint(equalTo: blurViewForLabel.bottomAnchor, constant: 10),
+            labelDesc.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            labelDesc.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
+
+        ])
+        
+    }
+    func configureLabelsForScrolling() {
+        blurLabel.translatesAutoresizingMaskIntoConstraints = false
+        blurLabel.font = .systemFont(ofSize: 12, weight: .regular)
+        blurLabel.textColor = .white
+        blurLabel.text = "FILTER - MEDIAN"
+        blurLabel.layer.cornerRadius = 5
+        blurLabel.layer.masksToBounds = true
+        view.addSubview(blurLabel)
+        
+//        blurLabel.insertSubview(blurViewForLabel, at: 0)
+        view.addSubview(blurViewForLabel)
+        blurLabel.layer.zPosition = 1
+
+        NSLayoutConstraint.activate([
+            blurLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            blurLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            blurViewForLabel.topAnchor.constraint(equalTo: blurLabel.topAnchor, constant: -10),
+            blurViewForLabel.leadingAnchor.constraint(equalTo: blurLabel.leadingAnchor, constant: -10),
+            blurViewForLabel.trailingAnchor.constraint(equalTo: blurLabel.trailingAnchor, constant: 10),
+            blurViewForLabel.bottomAnchor.constraint(equalTo: blurLabel.bottomAnchor, constant: 10),
+
+        ])
+    }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let initialX = scrollView.contentOffset.x + scrollView.frame.width
-        let targetX = scrollView.contentOffset.x + scrollView.frame.width / 2
-        labelDeneme.alpha = max(0, min(1, (initialX - targetX) / scrollView.frame.width))
-        labelDeneme.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
-        
-        labelDeneme.alpha = 0.0
-        labelDeneme.frame.origin.y = view.frame.height - 350
+        blurLabel.alpha = 0.0
+        blurViewForLabel.alpha = 0.0
+        labelDesc.alpha = 0.0
+        labelDesc.frame.origin.y = scrollView.frame.height - 300
+        blurViewForLabel.frame.origin.y = scrollView.frame.height - 400
+        blurLabel.frame.origin.y = scrollView.frame.height - 400
         
         let pageIndex = Int(scrollView.contentOffset.x / scrollView.bounds.width)
-        UIView.animate(withDuration: 1.8) {
-            self.labelDeneme.frame.origin.y = self.view.frame.height * 0.45
-//            self.blurLabelForFilterName.frame.origin.y = self.blurView.frame.midY - (self.blurView.frame.height / 4.5)
-//            self.labelForDesc.frame.origin.y = self.blurView.frame.maxY + 10
+        UIView.animate(withDuration: 0.8) {
+            self.blurViewForLabel.frame.origin.y = self.view.frame.height * 0.5
+            self.blurLabel.frame.origin.y = self.blurViewForLabel.frame.midY - (self.blurViewForLabel.frame.height / 4.5)
+            self.labelDesc.frame.origin.y = self.blurViewForLabel.frame.origin.y + 50
+
+ 
         }
         
-        UIView.animate(withDuration: 1.8, delay: 0.4, options: [.curveEaseOut], animations: {
-//            self.blurLabelForFilterName.alpha = 1.0
-//            self.blurView.alpha = 1.0
-            self.labelDeneme.alpha = 1.0
+        UIView.animate(withDuration: 0.8, delay: 0.5, options: [.curveEaseOut], animations: {
+            self.blurLabel.alpha = 1.0
+            self.blurViewForLabel.alpha = 1.0
+            self.labelDesc.alpha = 1.0
         }, completion: nil)
         
         
         switch pageIndex {
         case 0:
-            labelDeneme.text = "Fuji mountain lake in Morning"
+            labelDesc.text = "Fuji mountain lake in Morning"
+            blurLabel.text = "FILTER - MEDIAN"
         case 1:
-            labelDeneme.text = "African American Woman"
+            labelDesc.text = "African American Woman"
+            blurLabel.text = "FILTER - BEATIFUL"
         case 2:
-            labelDeneme.text = "Hand cream product package"
+            labelDesc.text = "Hand cream product package"
+            blurLabel.text = "FILTER - ENERGIC"
         default:
             break
         }
+        
+//        let initialX = scrollView.contentOffset.x + scrollView.frame.width
+//        let targetX = scrollView.contentOffset.x + scrollView.frame.width / 2
+//        labelDesc.alpha = max(0, min(1, (initialX - targetX) / scrollView.frame.width))
+//        labelDesc.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
         
         let locationButtonInitialX = scrollView.contentOffset.x + scrollView.frame.width
         let locationButtonTargetX = scrollView.contentOffset.x + scrollView.frame.width / 2
         locationButton.alpha = max(0, min(1, (locationButtonInitialX - locationButtonTargetX) / scrollView.frame.width))
         locationButton.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
         
+//        blurLabel.alpha = max(0, min(1, (initialX - targetX) / scrollView.frame.width))
+//        blurLabel.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
+//
+//        let blurInitialX = scrollView.contentOffset.x + scrollView.frame.width
+//        let blurTargetX = scrollView.contentOffset.x + scrollView.frame.width / 2
+//        blurViewForLabel.alpha = max(0, min(1, (blurInitialX - blurTargetX) / scrollView.frame.width))
+//        blurViewForLabel.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
+
     }
     
     func configureCollectionView() {
@@ -231,11 +274,11 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let firstCell = cell as? FirstHomeCell {
             
-            firstCell.animateIn()
+//            animateIn()
             
         }
         if indexPath.item == 2 {
-            print("Son hücreye ulaşıldı.")
+            print("Son vhücreye ulaşıldı.")
         }
 
 //        if let lastCell = collectionView.visibleCells.last, let lastCellIndexPath = collectionView.indexPath(for: lastCell), indexPath == lastCellIndexPath {
@@ -257,25 +300,10 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         switch indexPath.row {
         case 0:
             cell.imageForFilter.image = UIImage(named: "fuji")
-            cell.blurLabelForFilterName.text = "FILTER - MEDIAN"
-            cell.labelForDesc.text = "Fuji mountain lake in Morning"
-            labelForButton.textColor = .systemBlue
-            imageViewForIcon.tintColor = .systemBlue
-            
         case 1:
             cell.imageForFilter.image = UIImage(named: "african")
-            cell.blurLabelForFilterName.text = "FILTER - ENERGIC"
-            cell.labelForDesc.text = "African American Woman"
-            labelForButton.textColor = .systemYellow
-            imageViewForIcon.tintColor = .systemYellow
-
         case 2:
             cell.imageForFilter.image = UIImage(named: "handcream")
-            cell.blurLabelForFilterName.text = "FILTER - BEATIFUL"
-            cell.labelForDesc.text = "Hand cream product package"
-            labelForButton.textColor = .systemGreen
-            imageViewForIcon.tintColor = .systemGreen
-            
         default:
             break
         }
