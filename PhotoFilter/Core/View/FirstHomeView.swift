@@ -233,6 +233,8 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         let locationButtonTargetX = scrollView.contentOffset.x + scrollView.frame.width / 2
         locationButton.alpha = max(0, min(1, (locationButtonInitialX - locationButtonTargetX) / scrollView.frame.width))
         locationButton.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
+        
+        
 
     }
     

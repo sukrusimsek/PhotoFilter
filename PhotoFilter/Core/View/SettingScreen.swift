@@ -38,6 +38,11 @@ extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableVie
 //            versionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
 //            versionLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10)
         ])
+        navigationItem.leftBarButtonItem = UIBarButtonItem.menuButton(self, action: #selector(tappedBackPage), imageName: "backButton", height: 32, width: 32)
+        
+    }
+    @objc func tappedBackPage() {
+        navigationController?.popViewController(animated: true)
     }
     func configureTableView() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
