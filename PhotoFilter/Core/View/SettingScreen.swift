@@ -12,10 +12,9 @@ protocol SettingScreenInterface: AnyObject {
 }
 final class SettingScreen: UIViewController {
     private let viewModel = SettingViewModel()
-    let sections = ["SUPPORT", "EXPLORE OTHER APPS", "PRIVACY POLICY & LEGAL NOTICE"]
-    let supportOptions = ["Send Feedback", "Write Comment", "Share"]
-    let discoverOptions = ["My Other Apps", "Licence"]
-    let legalOptions = ["Privacy Policy", "Terms of Use", "Legal Notice"]
+    let sections = ["FILTERCRAFT", "OTHER"]
+    let supportOptions = ["Send Feedback", "Share"]
+    let discoverOptions = ["My Other Apps", "Licence", "Contact Us"]
     let tableView = UITableView()
     let versionLabel = UILabel()
     override func viewDidLoad() {
@@ -29,6 +28,7 @@ extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableVie
         title = "Settings"
         versionLabel.translatesAutoresizingMaskIntoConstraints = false
         versionLabel.textColor = .white
+        view.backgroundColor = UIColor(rgb: 0x1e1e1e)
         versionLabel.text = "Version 1.0"
         tableView.addSubview(versionLabel)
         NSLayoutConstraint.activate([
@@ -45,7 +45,8 @@ extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableVie
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.tableFooterView = UIView()
-        tableView.backgroundColor = .lightGray
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = UIColor(rgb: 0x1e1e1e)
         view.addSubview(tableView)
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -63,48 +64,39 @@ extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableVie
             return supportOptions.count
         case 1:
             return discoverOptions.count
-        case 2:
-            return legalOptions.count
         default:
             return 0
         }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.backgroundColor = .lightText
+        cell.backgroundColor = UIColor(rgb: 0x1e1e1e)
         var iconName = ""
         switch indexPath.section {
         case 0:
             if indexPath.row == 0 {
-                iconName = "square.and.arrow.up"
+                iconName = "iconForSendFeedback"
             } else if indexPath.row == 1 {
-                iconName = "square.and.arrow.down"
-            } else if indexPath.row == 2 {
-                iconName = "arrow.clockwise"
+                iconName = "iconForShare"
             }
             cell.textLabel?.text = supportOptions[indexPath.row]
         case 1:
             if indexPath.row == 0 {
-                iconName = "rectangle.on.rectangle"
+                iconName = "iconForMyOtherApps"
             } else if indexPath.row == 1 {
-                iconName = "rectangle.split.3x3"
+                iconName = "iconForLicence"
+            } else if indexPath.row == 2 {
+                iconName = "iconForContactUs"
             }
             cell.textLabel?.text = discoverOptions[indexPath.row]
-        case 2:
-            if indexPath.row == 0 {
-                iconName = "doc.text"
-            } else if indexPath.row == 1 {
-                iconName = "doc.richtext"
-            } else if indexPath.row == 2 {
-                iconName = "doc.plaintext"
-            }
-            cell.textLabel?.text = legalOptions[indexPath.row]
+        
         default:
             break
         }
-        cell.textLabel?.textColor = .black
-        cell.imageView?.image = UIImage(systemName: iconName)
-        cell.imageView?.tintColor = .black
+        let iconSize = CGSize(width: 24, height: 24)
+        let icon = UIImage(named: iconName)?.resizedImage(to: iconSize)
+        cell.imageView?.image = icon
+        cell.textLabel?.font = .systemFont(ofSize: 16, weight: .regular)
         return cell
     }
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -118,9 +110,6 @@ extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableVie
             performActionForSection0Row(at: indexPath.row)
         case 1:
             performActionForSection1Row(at: indexPath.row)
-        case 2:
-            performActionForSection2Row(at: indexPath.row)
-            // Diğer seçenekler için gerekli kontroller
         default:
             break
         }
@@ -142,13 +131,6 @@ extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableVie
                 }
             }
             break
-        case 2:
-            let textToShare = "Uygulamayı denemelisin!"
-            let appURL = URL(string: "https://apps.apple.com/tr/developer/sukru-simsek/id1728509670?l=tr")!
-
-            let activityViewController = UIActivityViewController(activityItems: [textToShare, appURL], applicationActivities: nil)
-            present(activityViewController, animated: true, completion: nil)
-            break
         default:
             break
         }
@@ -169,26 +151,6 @@ extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableVie
                 }
             }
             break
-        default:
-            break
-        }
-    }
-    func performActionForSection2Row(at index: Int) {
-        switch index {
-        case 0:
-            if let websiteURL = URL(string: "http://www.github.com/sukrusimsek") {
-                if UIApplication.shared.canOpenURL(websiteURL) {
-                    UIApplication.shared.open(websiteURL, options: [:], completionHandler: nil)
-                }
-            }
-            break
-        case 1:
-            if let websiteURL = URL(string: "http://www.github.com/sukrusimsek") {
-                if UIApplication.shared.canOpenURL(websiteURL) {
-                    UIApplication.shared.open(websiteURL, options: [:], completionHandler: nil)
-                }
-            }
-            break
         case 2:
             if let websiteURL = URL(string: "http://www.github.com/sukrusimsek") {
                 if UIApplication.shared.canOpenURL(websiteURL) {
@@ -200,23 +162,22 @@ extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableVie
             break
         }
     }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
         switch sections[section] {
-        case "SUPPORT":
-            headerView.backgroundColor = UIColor.red.withAlphaComponent(0.5)
-        case "EXPLORE OTHER APPS":
-            headerView.backgroundColor = UIColor.blue.withAlphaComponent(0.5)
-        case "PRIVACY POLICY & LEGAL NOTICE":
-            headerView.backgroundColor = UIColor.green.withAlphaComponent(0.5)
+        case "FILTERCRAFT":
+            headerView.backgroundColor = UIColor.clear
+        case "OTHER":
+            headerView.backgroundColor = UIColor.clear
         default:
             break
         }
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = sections[section]
-        label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        label.textColor = UIColor(white: 1, alpha: 0.5)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         headerView.addSubview(label)
         NSLayoutConstraint.activate([
                 label.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 15),
@@ -229,4 +190,32 @@ extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 40
     }
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        if section == 0 {
+            let containerHeight: CGFloat = 20
+            let separatorHeight: CGFloat = 1
+            let separatorYPosition = containerHeight - separatorHeight
+
+            let containerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: containerHeight))
+            containerView.backgroundColor = .clear
+
+            let separatorView = UIView(frame: CGRect(x: 0, y: separatorYPosition, width: tableView.frame.width, height: separatorHeight))
+            separatorView.backgroundColor = UIColor(white: 1, alpha: 0.1)
+            containerView.addSubview(separatorView)
+
+            return containerView
+        }
+        return nil
+    }
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 20
+        }
+        return 0
+    }
+
+
+
+    
 }
