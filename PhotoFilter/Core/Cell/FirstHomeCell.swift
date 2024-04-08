@@ -72,6 +72,7 @@ class FirstHomeCell: UICollectionViewCell {
         imageForFilter.layer.insertSublayer(gradientLayer, at: 0)
     }
     
+    
     override init(frame: CGRect) {
         super.init(frame: .zero)
         contentView.addSubview(imageForFilter)

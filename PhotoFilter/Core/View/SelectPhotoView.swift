@@ -41,14 +41,14 @@ extension SelectPhotoView: SelectPhotoViewInterface {
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
 
         navigationItem.rightBarButtonItem = UIBarButtonItem.menuButton(self, action: #selector(goToSettingScreenTapped), imageName: "settingsButton")
-        
         navigationItem.leftBarButtonItem = UIBarButtonItem.menuButton(self, action: #selector(tappedBackPage), imageName: "backButton", height: 32, width: 32)
         
         
     }
     @objc private func tappedBackPage() {
         print("tappedBackPage")
-//        navigationController?.dismiss(animated: true)
+        navigationController?.setNavigationBarHidden(true, animated: true)
+        navigationController?.popViewController(animated: true)
     }
     @objc private func goToSettingScreenTapped() {
         print("goToSettingScreenTapped")

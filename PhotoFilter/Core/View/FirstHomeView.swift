@@ -93,6 +93,20 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
     
     @objc func tappedLocalizationButton() {
         print("tappedLocalizationButton")
+        if locationButton.titleLabel?.text == "EN" {
+            locationButton.setTitle("TR", for: .normal)
+        } else {
+            locationButton.setTitle("EN", for: .normal)
+        }
+        UIView.animate(withDuration: 0.2, animations: {
+            self.locationButton.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+            self.locationButton.alpha = 0.7
+        }) { _ in
+            UIView.animate(withDuration: 0.2) {
+                self.locationButton.transform = .identity
+                self.locationButton.alpha = 1.0
+            }
+        }
     }
     func configureFilterPhotosButton() {
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -112,7 +126,7 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         viewBack.layer.masksToBounds = true
         button.addSubview(viewBack)
         imageViewForIcon.translatesAutoresizingMaskIntoConstraints = false
-        imageViewForIcon.image = UIImage(named: "cellSelectButton")
+        imageViewForIcon.image = UIImage(named: "cellSelectButton2")
         button.addSubview(imageViewForIcon)
         button.addTarget(self, action: #selector(tappedChoosePhotosForFilter), for: .touchUpInside)
         
@@ -183,20 +197,18 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         blurViewForLabel.alpha = 0.0
         labelDesc.alpha = 0.0
         
-        labelDesc.frame.origin.y = view.frame.height - 300
-        blurViewForLabel.frame.origin.y = view.frame.height - 300
-        blurLabel.frame.origin.y = view.frame.height - 300
+        labelDesc.frame.origin.y = view.frame.height - 200
+        blurViewForLabel.frame.origin.y = view.frame.height - 200
+        blurLabel.frame.origin.y = view.frame.height - 200
         
         let pageIndex = Int(scrollView.contentOffset.x / scrollView.bounds.width)
-        UIView.animate(withDuration: 1.8) {
+        UIView.animate(withDuration: 0.8) {
             self.blurViewForLabel.frame.origin.y = (self.view.frame.height * 0.5) + 30
             self.blurLabel.frame.origin.y = self.blurViewForLabel.frame.midY - (self.blurViewForLabel.frame.height / 4.5)
             self.labelDesc.frame.origin.y = self.blurViewForLabel.frame.origin.y + 50
-
- 
         }
         
-        UIView.animate(withDuration: 1.8, delay: 0.5, options: [.curveEaseOut], animations: {
+        UIView.animate(withDuration: 0.8, delay: 0.5, options: [.curveEaseOut], animations: {
             self.blurLabel.alpha = 1.0
             self.blurViewForLabel.alpha = 1.0
             self.labelDesc.alpha = 1.0
@@ -216,24 +228,11 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         default:
             break
         }
-        
-//        let initialX = scrollView.contentOffset.x + scrollView.frame.width
-//        let targetX = scrollView.contentOffset.x + scrollView.frame.width / 2
-//        labelDesc.alpha = max(0, min(1, (initialX - targetX) / scrollView.frame.width))
-//        labelDesc.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
-        
+
         let locationButtonInitialX = scrollView.contentOffset.x + scrollView.frame.width
         let locationButtonTargetX = scrollView.contentOffset.x + scrollView.frame.width / 2
         locationButton.alpha = max(0, min(1, (locationButtonInitialX - locationButtonTargetX) / scrollView.frame.width))
         locationButton.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
-        
-//        blurLabel.alpha = max(0, min(1, (initialX - targetX) / scrollView.frame.width))
-//        blurLabel.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
-//
-//        let blurInitialX = scrollView.contentOffset.x + scrollView.frame.width
-//        let blurTargetX = scrollView.contentOffset.x + scrollView.frame.width / 2
-//        blurViewForLabel.alpha = max(0, min(1, (blurInitialX - blurTargetX) / scrollView.frame.width))
-//        blurViewForLabel.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
 
     }
     
@@ -274,20 +273,19 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         return 3
     }
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if let firstCell = cell as? FirstHomeCell {
-            
-//            animateIn()
-            
-        }
-        if indexPath.item == 2 {
-            print("Son vhücreye ulaşıldı.")
-        }
-
-//        if let lastCell = collectionView.visibleCells.last, let lastCellIndexPath = collectionView.indexPath(for: lastCell), indexPath == lastCellIndexPath {
-//            if let firstCell = cell as? FirstHomeCell {
-//                firstCell.animateOut()
-//            }
-//        }
+        switch indexPath.row {
+            case 0:
+                labelForButton.textColor = UIColor.systemBlue
+                imageViewForIcon.image = UIImage(named: "cellSelectButtonBlue")
+            case 1:
+                labelForButton.textColor = UIColor.systemYellow
+                imageViewForIcon.image = UIImage(named: "cellSelectButtonYellow")
+            case 2:
+                labelForButton.textColor = UIColor.systemGreen
+                imageViewForIcon.image = UIImage(named: "cellSelectButtonGreen")
+            default:
+                break
+            }
         
     }
     
@@ -295,17 +293,22 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FirstHomeCell", for: indexPath) as! FirstHomeCell
         
         cell.applyGradient(colors: [color1, color2, color3] ,startPoint: CGPoint(x: 0.5, y: 1.0), endPoint: CGPoint(x: 0.5, y: 0.0), locations: [0.35,0.70,0.95])
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-//            collectionView.reloadData()
-//        }
+        //        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        //            collectionView.reloadData()
+        //        }
         
         switch indexPath.row {
         case 0:
             cell.imageForFilter.image = UIImage(named: "fuji")
+
         case 1:
             cell.imageForFilter.image = UIImage(named: "african")
+
         case 2:
             cell.imageForFilter.image = UIImage(named: "handcream")
+
+
+            
         default:
             break
         }
@@ -315,6 +318,7 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
     @objc func tappedChoosePhotosForFilter() {
         print("tappedChoosePhotosForFilter")
         navigationController?.pushViewController(SelectPhotoView(), animated: true)
+        navigationController?.setNavigationBarHidden(false, animated: true)
        
     }
     
