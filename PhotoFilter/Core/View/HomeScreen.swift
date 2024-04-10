@@ -77,7 +77,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         navigationController?.navigationBar.compactAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         
-        view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+        view.backgroundColor = UIColor(rgb: 0x1e1e1e)
 
         let rightSettingButton = UIBarButtonItem.menuButton(self, action: #selector(goToSettingScreenTapped), imageName: "settingsButton")
         let rightShareButton = UIBarButtonItem.menuButton(self, action: #selector(shareButtonTapped), imageName: "shareButton")
@@ -113,9 +113,9 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
 
     func configureOutputView() {
         imageViewOutput.translatesAutoresizingMaskIntoConstraints = false
-        imageViewOutput.image = UIImage(named: "defaultImage2")
+        imageViewOutput.image = nil
         imageViewOutput.contentMode = .scaleAspectFit
-        imageViewOutput.backgroundColor = .lightText
+        imageViewOutput.backgroundColor = UIColor(rgb: 0x1e1e1e)
         view.addSubview(imageViewOutput)
         NSLayoutConstraint.activate([
             imageViewOutput.widthAnchor.constraint(equalToConstant: view.frame.size.width),
@@ -156,13 +156,10 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     
     func configureShowOriginalButton() {
         showOriginalButton.translatesAutoresizingMaskIntoConstraints = false
-        if let iconImage = UIImage(named: "showOriginal")?.resized(to: CGSize(width: 32, height: 32)) {
+        if let iconImage = UIImage(named: "showOriginal")?.resizedImage(to: CGSize(width: 32, height: 32)) {
             showOriginalButton.setImage(iconImage, for: .normal)
         }
-
-//        showOriginalButton.imageView?.contentMode = .scaleAspectFit
         viewForBackgroundPickerSaveShowButton.addSubview(showOriginalButton)
-        
         NSLayoutConstraint.activate([
             showOriginalButton.topAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.topAnchor, constant: 25),
             showOriginalButton.trailingAnchor.constraint(equalTo: viewForBackgroundPickerSaveShowButton.trailingAnchor, constant: -10),
@@ -443,7 +440,7 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize.init(width: 120, height: 120)
+        return CGSize.init(width: 90, height: 90)
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         imageViewOutput.image = imageCollection[indexPath.item]
@@ -560,13 +557,3 @@ extension HomeScreen: HomeScreenInterface, UIImagePickerControllerDelegate & UIN
     }
 }
 
-import UIKit
-
-extension UIImage {
-    func resized(to size: CGSize) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(size, false, scale)
-        defer { UIGraphicsEndImageContext() }
-        draw(in: CGRect(origin: .zero, size: size))
-        return UIGraphicsGetImageFromCurrentImageContext()
-    }
-}

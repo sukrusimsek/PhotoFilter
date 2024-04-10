@@ -34,9 +34,6 @@ extension SettingScreen: SettingScreenInterface, UITableViewDelegate, UITableVie
         NSLayoutConstraint.activate([
             versionLabel.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
             versionLabel.bottomAnchor.constraint(equalTo: tableView.bottomAnchor),
-            
-//            versionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            versionLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10)
         ])
         navigationItem.leftBarButtonItem = UIBarButtonItem.menuButton(self, action: #selector(tappedBackPage), imageName: "backButton", height: 32, width: 32)
         

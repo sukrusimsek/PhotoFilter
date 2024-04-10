@@ -43,6 +43,8 @@ final class FirstHomeView: UIViewController {
         blurView.layer.masksToBounds = true
         return blurView
     }()
+    
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,12 +53,12 @@ final class FirstHomeView: UIViewController {
         
 
     }
+    
 
 }
 
 
 extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    
     
     func configureVC() {
         print("configureVCFirstHomeView")
@@ -234,8 +236,16 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         locationButton.alpha = max(0, min(1, (locationButtonInitialX - locationButtonTargetX) / scrollView.frame.width))
         locationButton.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
         
+//        let pageIndex2 = Int(scrollView.contentOffset.x / scrollView.bounds.width)
+//        
+//        // Eğer pageIndex 2'ye eşitse ve sola doğru kaydırma yapıldıysa
+//        if pageIndex2 == 2 && scrollView.panGestureRecognizer.translation(in: scrollView.superview).x < 0 {
+//            // Başka bir sayfaya yönlendirme işlemini gerçekleştir
+//            print("2. index'e ulaşıldı ve sola doğru kaydırma yapıldı.")
+//            navigationController?.pushViewController(SelectPhotoView(), animated: true)
+//        }
         
-
+        
     }
     
     func configureCollectionView() {
@@ -267,10 +277,25 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         ])
         
     }
+    
+    
+//    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+//        let offsetY = scrollView.contentOffset.x
+//        let contentHeight = scrollView.contentSize.width
+//        let width = scrollView.frame.size.width
+//
+//        if offsetY >= contentHeight - 10 {
+//            print("asdklhfglka")
+//        }
+//        
+//    }
+    
+
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.size.width, height: view.frame.size.height)
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 3
     }
@@ -308,9 +333,6 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
 
         case 2:
             cell.imageForFilter.image = UIImage(named: "handcream")
-
-
-            
         default:
             break
         }
