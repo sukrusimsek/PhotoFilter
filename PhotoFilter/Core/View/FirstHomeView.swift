@@ -14,14 +14,13 @@ protocol FirstHomeViewInterface: AnyObject {
     func configureLocalizationButton()
     func configureFilterPhotosButton()
     func configureLabelsForScrolling()
+    func startAutoScroll()
 }
 
 final class FirstHomeView: UIViewController {
 
     private let viewModel = FirstHomeViewModel()
     private var collectionView: UICollectionView!
-    private var timer: Timer?
-    private var currentPage = 0
     private let color1 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 1)
     private let color2 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.5)
     private let color3 = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.1)
@@ -43,7 +42,8 @@ final class FirstHomeView: UIViewController {
         blurView.layer.masksToBounds = true
         return blurView
     }()
-    
+    var timer: Timer?
+    var currentCellIndex = 0
 
 
     override func viewDidLoad() {
@@ -178,8 +178,6 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         blurLabel.layer.cornerRadius = 5
         blurLabel.layer.masksToBounds = true
         view.addSubview(blurLabel)
-        
-//        blurLabel.insertSubview(blurViewForLabel, at: 0)
         view.addSubview(blurViewForLabel)
         blurLabel.layer.zPosition = 1
 
@@ -193,7 +191,13 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
 
         ])
     }
-    
+    func startAutoScroll() {
+        timer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(scrollToNextCell), userInfo: nil, repeats: true)
+    }
+    @objc func scrollToNextCell() {
+        currentCellIndex = (currentCellIndex < 3 - 1) ? currentCellIndex + 1 : 0
+        collectionView.scrollToItem(at: IndexPath(item: currentCellIndex, section: 0), at: .centeredHorizontally, animated: true)
+    }
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         blurLabel.alpha = 0.0
         blurViewForLabel.alpha = 0.0
@@ -235,17 +239,6 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         let locationButtonTargetX = scrollView.contentOffset.x + scrollView.frame.width / 2
         locationButton.alpha = max(0, min(1, (locationButtonInitialX - locationButtonTargetX) / scrollView.frame.width))
         locationButton.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
-        
-//        let pageIndex2 = Int(scrollView.contentOffset.x / scrollView.bounds.width)
-//        
-//        // Eğer pageIndex 2'ye eşitse ve sola doğru kaydırma yapıldıysa
-//        if pageIndex2 == 2 && scrollView.panGestureRecognizer.translation(in: scrollView.superview).x < 0 {
-//            // Başka bir sayfaya yönlendirme işlemini gerçekleştir
-//            print("2. index'e ulaşıldı ve sola doğru kaydırma yapıldı.")
-//            navigationController?.pushViewController(SelectPhotoView(), animated: true)
-//        }
-        
-        
     }
     
     func configureCollectionView() {
@@ -279,19 +272,6 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
     }
     
     
-//    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-//        let offsetY = scrollView.contentOffset.x
-//        let contentHeight = scrollView.contentSize.width
-//        let width = scrollView.frame.size.width
-//
-//        if offsetY >= contentHeight - 10 {
-//            print("asdklhfglka")
-//        }
-//        
-//    }
-    
-
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.size.width, height: view.frame.size.height)
     }
@@ -320,9 +300,9 @@ extension FirstHomeView: FirstHomeViewInterface, UICollectionViewDataSource, UIC
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FirstHomeCell", for: indexPath) as! FirstHomeCell
         
         cell.applyGradient(colors: [color1, color2, color3] ,startPoint: CGPoint(x: 0.5, y: 1.0), endPoint: CGPoint(x: 0.5, y: 0.0), locations: [0.35,0.70,0.95])
-        //        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-        //            collectionView.reloadData()
-        //        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            collectionView.reloadData()
+        }
         
         switch indexPath.row {
         case 0:

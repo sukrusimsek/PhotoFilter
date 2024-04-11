@@ -26,5 +26,6 @@ extension FirstHomeViewModel: FirstHomeViewModelInterface {
         view?.configureLabel()
         view?.configureLocalizationButton()
         view?.configureFilterPhotosButton()
+        view?.startAutoScroll()
     }
 }
